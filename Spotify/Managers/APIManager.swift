@@ -51,4 +51,34 @@ final class APIManager {
         
         task.resume()
     }
+    
+    public func getCurrentUserProfile(completion: @escaping (Result<UserProfile, Error>) -> Void) {
+        guard let accessToken = AuthManager.shared.accessToken else {
+            completion(.failure(APIError.UnAuthenticated))
+            return
+        }
+        
+        var request = URLRequest(url: URL(string: "\(Constants.baseUrl)/me")!)
+        request.httpMethod = HttpMethod.GET.rawValue
+        request.setValue("Bearer \(accessToken)", forHTTPHeaderField: "Authorization")
+        
+        let task = URLSession.shared.dataTask(with: request) { data, response, error in
+            guard let data, error == nil else {
+                completion(.failure(APIError.FailedToGetData))
+                return
+            }
+            
+            do {
+                let jsonDecoder = JSONDecoder()
+                jsonDecoder.keyDecodingStrategy = .convertFromSnakeCase
+                
+                completion(.success(try jsonDecoder.decode(UserProfile.self, from: data)))
+            } catch {
+                print(error)
+                completion(.failure(error))
+            }
+        }
+        
+        task.resume()
+    }
 }

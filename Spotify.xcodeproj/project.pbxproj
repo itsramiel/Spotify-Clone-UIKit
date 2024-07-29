@@ -33,6 +33,7 @@
 		9B21DCDD2C51611200E2C520 /* Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9B21DCDC2C51611200E2C520 /* Extensions.swift */; };
 		9B21DCDF2C5299DE00E2C520 /* AuthResponse.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9B21DCDE2C5299DE00E2C520 /* AuthResponse.swift */; };
 		9B21DCE12C52AC5700E2C520 /* HttpMethod.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9B21DCE02C52AC5700E2C520 /* HttpMethod.swift */; };
+		9BCF76932C580C340007ACC4 /* NewReleasesResponse.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9BCF76922C580C340007ACC4 /* NewReleasesResponse.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -64,6 +65,7 @@
 		9B21DCDC2C51611200E2C520 /* Extensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Extensions.swift; sourceTree = "<group>"; };
 		9B21DCDE2C5299DE00E2C520 /* AuthResponse.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AuthResponse.swift; sourceTree = "<group>"; };
 		9B21DCE02C52AC5700E2C520 /* HttpMethod.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HttpMethod.swift; sourceTree = "<group>"; };
+		9BCF76922C580C340007ACC4 /* NewReleasesResponse.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NewReleasesResponse.swift; sourceTree = "<group>"; };
 		E74F4666242E810A58AFD9D5 /* Pods-Spotify.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Spotify.debug.xcconfig"; path = "Target Support Files/Pods-Spotify/Pods-Spotify.debug.xcconfig"; sourceTree = "<group>"; };
 		E8A16D8E41F3FB498440E8F7 /* Pods_Spotify.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_Spotify.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 /* End PBXFileReference section */
@@ -156,6 +158,7 @@
 				9B21DCDA2C502B0F00E2C520 /* UserProfile.swift */,
 				9B21DCDE2C5299DE00E2C520 /* AuthResponse.swift */,
 				9B21DCE02C52AC5700E2C520 /* HttpMethod.swift */,
+				9BCF76922C580C340007ACC4 /* NewReleasesResponse.swift */,
 			);
 			path = Models;
 			sourceTree = "<group>";
@@ -335,6 +338,7 @@
 				9B21DCB82C5028BD00E2C520 /* TabBarViewController.swift in Sources */,
 				9B21DCD32C502A9800E2C520 /* HapticsManager.swift in Sources */,
 				9B21DCDF2C5299DE00E2C520 /* AuthResponse.swift in Sources */,
+				9BCF76932C580C340007ACC4 /* NewReleasesResponse.swift in Sources */,
 				9B21DCD72C502AF500E2C520 /* AudioTrack.swift in Sources */,
 				9B21DCA22C5024C800E2C520 /* HomeViewController.swift in Sources */,
 				9B21DCC02C50296100E2C520 /* AuthViewController.swift in Sources */,
