@@ -18,6 +18,8 @@ class NewReleaseCollectionViewCell: UICollectionViewCell {
         let label = UILabel()
         label.numberOfLines = 0
         label.font = .systemFont(ofSize: 22, weight: .semibold)
+        label.setContentHuggingPriority(.defaultLow, for: .vertical)
+        label.setContentCompressionResistancePriority(.defaultHigh, for: .vertical)
 
         return label
     }()
@@ -26,6 +28,8 @@ class NewReleaseCollectionViewCell: UICollectionViewCell {
         let label = UILabel()
         label.numberOfLines = 0
         label.font = .systemFont(ofSize: 18, weight: .light)
+        label.setContentHuggingPriority(.defaultHigh, for: .vertical)
+        label.setContentCompressionResistancePriority(.required, for: .vertical)
 
         return label
     }()
@@ -34,8 +38,20 @@ class NewReleaseCollectionViewCell: UICollectionViewCell {
         let label = UILabel()
         label.numberOfLines = 0
         label.font = .systemFont(ofSize: 18, weight: .regular)
+        label.setContentHuggingPriority(.defaultHigh, for: .vertical)
+        label.setContentCompressionResistancePriority(.required, for: .vertical)
 
         return label
+    }()
+
+    private let stackView: UIStackView = {
+        let stackView = UIStackView()
+        stackView.axis = .vertical
+        stackView.spacing = 5
+        stackView.alignment = .leading
+        stackView.distribution = .fill
+
+        return stackView
     }()
 
     override init(frame: CGRect) {
@@ -43,11 +59,14 @@ class NewReleaseCollectionViewCell: UICollectionViewCell {
 
         contentView.backgroundColor = .secondarySystemBackground
         contentView.addSubview(albumCoverImageView)
-        contentView.addSubview(albumNameLabel)
-        contentView.addSubview(numberOfTracksLabel)
-        contentView.addSubview(artistNameLabel)
+        contentView.addSubview(stackView)
+
+        stackView.addArrangedSubview(albumNameLabel)
+        stackView.addArrangedSubview(numberOfTracksLabel)
+        stackView.addArrangedSubview(artistNameLabel)
 
         contentView.clipsToBounds = true
+        setUpConstraints()
     }
 
     @available(*, unavailable)
@@ -55,29 +74,21 @@ class NewReleaseCollectionViewCell: UICollectionViewCell {
         fatalError("init(coder:) has not been implemented")
     }
 
-    override func layoutSubviews() {
-        super.layoutSubviews()
-
+    func setUpConstraints() {
         albumCoverImageView.translatesAutoresizingMaskIntoConstraints = false
-        albumCoverImageView.leftAnchor.constraint(equalTo: contentView.leftAnchor, constant: NewReleaseCollectionViewCell.PADDING).isActive = true
-        albumCoverImageView.topAnchor.constraint(equalTo: contentView.topAnchor, constant: NewReleaseCollectionViewCell.PADDING).isActive = true
-        albumCoverImageView.heightAnchor.constraint(equalToConstant: contentView.frame.height - NewReleaseCollectionViewCell.PADDING * 2).isActive = true
-        albumCoverImageView.widthAnchor.constraint(equalTo: albumCoverImageView.heightAnchor).isActive = true
+        stackView.translatesAutoresizingMaskIntoConstraints = false
 
-        albumNameLabel.translatesAutoresizingMaskIntoConstraints = false
-        albumNameLabel.leftAnchor.constraint(equalTo: albumCoverImageView.rightAnchor, constant: NewReleaseCollectionViewCell.PADDING).isActive = true
-        albumNameLabel.topAnchor.constraint(equalTo: contentView.topAnchor, constant: NewReleaseCollectionViewCell.PADDING).isActive = true
-        albumNameLabel.rightAnchor.constraint(equalTo: contentView.rightAnchor, constant: -NewReleaseCollectionViewCell.PADDING).isActive = true
+        NSLayoutConstraint.activate([
+            albumCoverImageView.leftAnchor.constraint(equalTo: contentView.leftAnchor, constant: NewReleaseCollectionViewCell.PADDING),
+            albumCoverImageView.topAnchor.constraint(equalTo: contentView.topAnchor, constant: NewReleaseCollectionViewCell.PADDING),
+            albumCoverImageView.heightAnchor.constraint(equalToConstant: contentView.frame.height - NewReleaseCollectionViewCell.PADDING * 2),
+            albumCoverImageView.widthAnchor.constraint(equalTo: albumCoverImageView.heightAnchor),
 
-        artistNameLabel.translatesAutoresizingMaskIntoConstraints = false
-        artistNameLabel.leftAnchor.constraint(equalTo: albumCoverImageView.rightAnchor, constant: NewReleaseCollectionViewCell.PADDING).isActive = true
-        artistNameLabel.topAnchor.constraint(equalTo: albumNameLabel.bottomAnchor, constant: NewReleaseCollectionViewCell.PADDING).isActive = true
-        artistNameLabel.rightAnchor.constraint(equalTo: contentView.rightAnchor, constant: -NewReleaseCollectionViewCell.PADDING).isActive = true
-
-        numberOfTracksLabel.translatesAutoresizingMaskIntoConstraints = false
-        numberOfTracksLabel.leftAnchor.constraint(equalTo: albumCoverImageView.rightAnchor, constant: NewReleaseCollectionViewCell.PADDING).isActive = true
-        numberOfTracksLabel.bottomAnchor.constraint(equalTo: contentView.bottomAnchor, constant: -NewReleaseCollectionViewCell.PADDING).isActive = true
-        numberOfTracksLabel.rightAnchor.constraint(equalTo: contentView.rightAnchor, constant: -NewReleaseCollectionViewCell.PADDING).isActive = true
+            stackView.leftAnchor.constraint(equalTo: albumCoverImageView.rightAnchor, constant: NewReleaseCollectionViewCell.PADDING),
+            stackView.topAnchor.constraint(equalTo: contentView.topAnchor, constant: NewReleaseCollectionViewCell.PADDING),
+            stackView.rightAnchor.constraint(equalTo: contentView.rightAnchor, constant: -NewReleaseCollectionViewCell.PADDING),
+            stackView.bottomAnchor.constraint(equalTo: contentView.bottomAnchor, constant: -NewReleaseCollectionViewCell.PADDING)
+        ])
     }
 
     override func prepareForReuse() {
