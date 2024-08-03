@@ -140,18 +140,20 @@ class HomeViewController: UIViewController {
 
             item.contentInsets = .init(top: 0, leading: 0, bottom: 4, trailing: 4)
 
+            let itemsCount = 3
+
             let verticalGroup = NSCollectionLayoutGroup.vertical(
                 layoutSize: NSCollectionLayoutSize(
                     widthDimension: .fractionalWidth(1),
                     heightDimension: .fractionalHeight(1)
                 ),
-                subitems: Array(repeating: item, count: 3)
+                subitems: Array(repeating: item, count: itemsCount)
             )
 
             let horizontalGroup = NSCollectionLayoutGroup.horizontal(
                 layoutSize: NSCollectionLayoutSize(
                     widthDimension: .fractionalWidth(0.9),
-                    heightDimension: .absolute(360)
+                    heightDimension: .absolute(NewReleaseCollectionViewCell.HEIGHT * CGFloat(itemsCount))
                 ),
                 subitems: [verticalGroup]
             )

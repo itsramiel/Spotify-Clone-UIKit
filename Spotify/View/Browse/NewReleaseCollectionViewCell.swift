@@ -3,6 +3,8 @@ import UIKit
 
 class NewReleaseCollectionViewCell: UICollectionViewCell {
     static let identifier = "NewReleaseCollectionViewCell"
+    static let HEIGHT: CGFloat = 130
+    private static let PADDING: CGFloat = 5
 
     private let albumCoverImageView: UIImageView = {
         let imageView = UIImageView()
@@ -55,33 +57,27 @@ class NewReleaseCollectionViewCell: UICollectionViewCell {
 
     override func layoutSubviews() {
         super.layoutSubviews()
-        albumNameLabel.sizeToFit()
-        numberOfTracksLabel.sizeToFit()
-        artistNameLabel.sizeToFit()
 
-        print(contentView.frame)
+        albumCoverImageView.translatesAutoresizingMaskIntoConstraints = false
+        albumCoverImageView.leftAnchor.constraint(equalTo: contentView.leftAnchor, constant: NewReleaseCollectionViewCell.PADDING).isActive = true
+        albumCoverImageView.topAnchor.constraint(equalTo: contentView.topAnchor, constant: NewReleaseCollectionViewCell.PADDING).isActive = true
+        albumCoverImageView.heightAnchor.constraint(equalToConstant: contentView.frame.height - NewReleaseCollectionViewCell.PADDING * 2).isActive = true
+        albumCoverImageView.widthAnchor.constraint(equalTo: albumCoverImageView.heightAnchor).isActive = true
 
-        let imageSize: CGFloat = contentView.height - 10
-        albumCoverImageView.frame = CGRect(x: 5, y: 5, width: imageSize, height: imageSize)
+        albumNameLabel.translatesAutoresizingMaskIntoConstraints = false
+        albumNameLabel.leftAnchor.constraint(equalTo: albumCoverImageView.rightAnchor, constant: NewReleaseCollectionViewCell.PADDING).isActive = true
+        albumNameLabel.topAnchor.constraint(equalTo: contentView.topAnchor, constant: NewReleaseCollectionViewCell.PADDING).isActive = true
+        albumNameLabel.rightAnchor.constraint(equalTo: contentView.rightAnchor, constant: -NewReleaseCollectionViewCell.PADDING).isActive = true
 
-        let albumLabelSize = albumNameLabel.sizeThatFits(
-            CGSize(width: contentView.width - imageSize - 10, height: contentView.height - 10)
-        )
+        artistNameLabel.translatesAutoresizingMaskIntoConstraints = false
+        artistNameLabel.leftAnchor.constraint(equalTo: albumCoverImageView.rightAnchor, constant: NewReleaseCollectionViewCell.PADDING).isActive = true
+        artistNameLabel.topAnchor.constraint(equalTo: albumNameLabel.bottomAnchor, constant: NewReleaseCollectionViewCell.PADDING).isActive = true
+        artistNameLabel.rightAnchor.constraint(equalTo: contentView.rightAnchor, constant: -NewReleaseCollectionViewCell.PADDING).isActive = true
 
-        albumNameLabel.frame = CGRect(
-            x: albumCoverImageView.right + 10,
-            y: 5,
-            width: albumLabelSize.width,
-            height: albumLabelSize.height
-        )
-
-        numberOfTracksLabel.frame = CGRect(
-            x: albumCoverImageView.right + 10,
-            y: albumCoverImageView.bottom - 50,
-            width: numberOfTracksLabel.width,
-            height: 50
-        )
-        print(numberOfTracksLabel.frame)
+        numberOfTracksLabel.translatesAutoresizingMaskIntoConstraints = false
+        numberOfTracksLabel.leftAnchor.constraint(equalTo: albumCoverImageView.rightAnchor, constant: NewReleaseCollectionViewCell.PADDING).isActive = true
+        numberOfTracksLabel.bottomAnchor.constraint(equalTo: contentView.bottomAnchor, constant: -NewReleaseCollectionViewCell.PADDING).isActive = true
+        numberOfTracksLabel.rightAnchor.constraint(equalTo: contentView.rightAnchor, constant: -NewReleaseCollectionViewCell.PADDING).isActive = true
     }
 
     override func prepareForReuse() {
