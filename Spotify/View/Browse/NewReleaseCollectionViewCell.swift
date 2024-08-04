@@ -18,18 +18,8 @@ class NewReleaseCollectionViewCell: UICollectionViewCell {
         let label = UILabel()
         label.numberOfLines = 0
         label.font = .systemFont(ofSize: 22, weight: .semibold)
-        label.setContentHuggingPriority(.defaultLow, for: .vertical)
-        label.setContentCompressionResistancePriority(.defaultHigh, for: .vertical)
-
-        return label
-    }()
-
-    private let numberOfTracksLabel: UILabel = {
-        let label = UILabel()
-        label.numberOfLines = 0
-        label.font = .systemFont(ofSize: 18, weight: .light)
         label.setContentHuggingPriority(.defaultHigh, for: .vertical)
-        label.setContentCompressionResistancePriority(.required, for: .vertical)
+        label.setContentCompressionResistancePriority(.defaultLow, for: .vertical)
 
         return label
     }()
@@ -37,19 +27,36 @@ class NewReleaseCollectionViewCell: UICollectionViewCell {
     private let artistNameLabel: UILabel = {
         let label = UILabel()
         label.numberOfLines = 0
-        label.font = .systemFont(ofSize: 18, weight: .regular)
-        label.setContentHuggingPriority(.defaultHigh, for: .vertical)
-        label.setContentCompressionResistancePriority(.required, for: .vertical)
+        label.font = .systemFont(ofSize: 18, weight: .semibold)
 
         return label
     }()
 
-    private let stackView: UIStackView = {
+    private let numberOfTracksLabel: UILabel = {
+        let label = UILabel()
+        label.numberOfLines = 0
+        label.font = .systemFont(ofSize: 14, weight: .light)
+
+        return label
+    }()
+
+    private let footerStack: UIStackView = {
+        let stack = UIStackView()
+        stack.axis = .vertical
+        stack.spacing = 4
+        stack.alignment = .leading
+        stack.distribution = .fill
+        stack.setContentHuggingPriority(.defaultHigh, for: .vertical)
+
+        return stack
+    }()
+
+    private let trailingView: UIStackView = {
         let stackView = UIStackView()
         stackView.axis = .vertical
-        stackView.spacing = 5
+        stackView.spacing = 4
         stackView.alignment = .leading
-        stackView.distribution = .fill
+        stackView.distribution = .equalSpacing
 
         return stackView
     }()
@@ -59,11 +66,13 @@ class NewReleaseCollectionViewCell: UICollectionViewCell {
 
         contentView.backgroundColor = .secondarySystemBackground
         contentView.addSubview(albumCoverImageView)
-        contentView.addSubview(stackView)
+        contentView.addSubview(trailingView)
 
-        stackView.addArrangedSubview(albumNameLabel)
-        stackView.addArrangedSubview(numberOfTracksLabel)
-        stackView.addArrangedSubview(artistNameLabel)
+        footerStack.addArrangedSubview(numberOfTracksLabel)
+        footerStack.addArrangedSubview(artistNameLabel)
+
+        trailingView.addArrangedSubview(albumNameLabel)
+        trailingView.addArrangedSubview(footerStack)
 
         contentView.clipsToBounds = true
         setUpConstraints()
@@ -76,7 +85,7 @@ class NewReleaseCollectionViewCell: UICollectionViewCell {
 
     func setUpConstraints() {
         albumCoverImageView.translatesAutoresizingMaskIntoConstraints = false
-        stackView.translatesAutoresizingMaskIntoConstraints = false
+        trailingView.translatesAutoresizingMaskIntoConstraints = false
 
         NSLayoutConstraint.activate([
             albumCoverImageView.leftAnchor.constraint(equalTo: contentView.leftAnchor, constant: NewReleaseCollectionViewCell.PADDING),
@@ -84,10 +93,10 @@ class NewReleaseCollectionViewCell: UICollectionViewCell {
             albumCoverImageView.heightAnchor.constraint(equalToConstant: contentView.frame.height - NewReleaseCollectionViewCell.PADDING * 2),
             albumCoverImageView.widthAnchor.constraint(equalTo: albumCoverImageView.heightAnchor),
 
-            stackView.leftAnchor.constraint(equalTo: albumCoverImageView.rightAnchor, constant: NewReleaseCollectionViewCell.PADDING),
-            stackView.topAnchor.constraint(equalTo: contentView.topAnchor, constant: NewReleaseCollectionViewCell.PADDING),
-            stackView.rightAnchor.constraint(equalTo: contentView.rightAnchor, constant: -NewReleaseCollectionViewCell.PADDING),
-            stackView.bottomAnchor.constraint(equalTo: contentView.bottomAnchor, constant: -NewReleaseCollectionViewCell.PADDING)
+            trailingView.leftAnchor.constraint(equalTo: albumCoverImageView.rightAnchor, constant: NewReleaseCollectionViewCell.PADDING),
+            trailingView.topAnchor.constraint(equalTo: contentView.topAnchor, constant: NewReleaseCollectionViewCell.PADDING),
+            trailingView.rightAnchor.constraint(equalTo: contentView.rightAnchor, constant: -NewReleaseCollectionViewCell.PADDING),
+            trailingView.bottomAnchor.constraint(equalTo: contentView.bottomAnchor, constant: -NewReleaseCollectionViewCell.PADDING)
         ])
     }
 
