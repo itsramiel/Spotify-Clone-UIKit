@@ -9,8 +9,8 @@ import UIKit
 
 enum BrowseSectionType {
     case newReleases(viewModels: [NewReleasesCellViewModel])
-    case featuredPlaylists(viewModels: [NewReleasesCellViewModel])
-    case recommendedTracks(viewModels: [NewReleasesCellViewModel])
+    case featuredPlaylists(viewModels: [FeaturedPlaylistCellViewModel])
+    case recommendedTracks(viewModels: [RecommendedTrackCellViewModel])
 }
 
 class HomeViewController: UIViewController {
@@ -109,10 +109,22 @@ class HomeViewController: UIViewController {
         }
     }
 
-    private func configureModels(newAlbmus: [Album], playlists _: [Playlist], tracks _: [Track]) {
+    private func configureModels(newAlbmus: [Album], playlists: [Playlist], tracks: [Track]) {
         sections.append(
-            .newReleases(viewModels: newAlbmus.compactMap { NewReleasesCellViewModel(
+            .newReleases(viewModels: newAlbmus.map { NewReleasesCellViewModel(
                 name: $0.name, artworkURL: URL(string: $0.images.first?.url ?? ""), numberOfTracks: $0.totalTracks, artistName: $0.artists.first?.name ?? ""
+            ) })
+        )
+
+        sections.append(
+            .featuredPlaylists(viewModels: playlists.map { FeaturedPlaylistCellViewModel(
+                name: $0.name, artworkURL: URL(string: $0.images.first?.url ?? ""), creatorName: $0.owner.displayName
+            ) })
+        )
+
+        sections.append(
+            .recommendedTracks(viewModels: tracks.map { RecommendedTrackCellViewModel(
+                name: $0.name, artworkURL: URL(string: $0.album.images.first?.url ?? ""), artistName: $0.artists.first?.name ?? ""
             ) })
         )
 
@@ -164,7 +176,7 @@ class HomeViewController: UIViewController {
         case 1:
             let item = NSCollectionLayoutItem(layoutSize:
                 NSCollectionLayoutSize(
-                    widthDimension: .fractionalHeight(0.5),
+                    widthDimension: .fractionalWidth(1),
                     heightDimension: .fractionalHeight(0.5)
                 )
             )
@@ -173,8 +185,8 @@ class HomeViewController: UIViewController {
 
             let verticalGroup = NSCollectionLayoutGroup.vertical(
                 layoutSize: NSCollectionLayoutSize(
-                    widthDimension: .absolute(200),
-                    heightDimension: .absolute(400)
+                    widthDimension: .absolute(FeaturedPlaylistCollectionViewCell.WIDTH),
+                    heightDimension: .absolute(FeaturedPlaylistCollectionViewCell.ESTIMATED_HEIGHT * 2)
                 ),
                 subitems: Array(repeating: item, count: 2)
             )
@@ -213,9 +225,9 @@ extension HomeViewController: UICollectionViewDataSource, UICollectionViewDelega
         let section = sections[section]
         switch section {
         case let .newReleases(viewModels: viewModels):
-            fallthrough
+            return viewModels.count
         case let .featuredPlaylists(viewModels: viewModels):
-            fallthrough
+            return viewModels.count
         case let .recommendedTracks(viewModels: viewModels):
             return viewModels.count
         }
@@ -232,15 +244,16 @@ extension HomeViewController: UICollectionViewDataSource, UICollectionViewDelega
             guard let cell = collectionView.dequeueReusableCell(
                 withReuseIdentifier: NewReleaseCollectionViewCell.identifier, for: indexPath
             ) as? NewReleaseCollectionViewCell else { fatalError("Invalid cell type") }
-            let viewModel = viewModels[indexPath.row]
 
-            cell.configure(with: viewModel)
+            cell.configure(with: viewModels[indexPath.row])
             return cell
         case let .featuredPlaylists(viewModels: viewModels):
             guard let cell = collectionView.dequeueReusableCell(
                 withReuseIdentifier: FeaturedPlaylistCollectionViewCell.identifier, for: indexPath
             ) as? FeaturedPlaylistCollectionViewCell else { fatalError("Invalid cell type") }
             cell.backgroundColor = .systemBlue
+
+            cell.configure(with: viewModels[indexPath.row])
             return cell
         case let .recommendedTracks(viewModels: viewModels):
             guard let cell = collectionView.dequeueReusableCell(

@@ -6,7 +6,7 @@ class NewReleaseCollectionViewCell: UICollectionViewCell {
     static let HEIGHT: CGFloat = 130
     private static let PADDING: CGFloat = 5
 
-    private let albumCoverImageView: UIImageView = {
+    private let playlistCoverImageView: UIImageView = {
         let imageView = UIImageView()
         imageView.image = UIImage(systemName: "photo")
         imageView.contentMode = .scaleAspectFill
@@ -65,7 +65,7 @@ class NewReleaseCollectionViewCell: UICollectionViewCell {
         super.init(frame: frame)
 
         contentView.backgroundColor = .secondarySystemBackground
-        contentView.addSubview(albumCoverImageView)
+        contentView.addSubview(playlistCoverImageView)
         contentView.addSubview(trailingView)
 
         footerStack.addArrangedSubview(numberOfTracksLabel)
@@ -84,16 +84,16 @@ class NewReleaseCollectionViewCell: UICollectionViewCell {
     }
 
     func setUpConstraints() {
-        albumCoverImageView.translatesAutoresizingMaskIntoConstraints = false
+        playlistCoverImageView.translatesAutoresizingMaskIntoConstraints = false
         trailingView.translatesAutoresizingMaskIntoConstraints = false
 
         NSLayoutConstraint.activate([
-            albumCoverImageView.leftAnchor.constraint(equalTo: contentView.leftAnchor, constant: NewReleaseCollectionViewCell.PADDING),
-            albumCoverImageView.topAnchor.constraint(equalTo: contentView.topAnchor, constant: NewReleaseCollectionViewCell.PADDING),
-            albumCoverImageView.heightAnchor.constraint(equalToConstant: contentView.frame.height - NewReleaseCollectionViewCell.PADDING * 2),
-            albumCoverImageView.widthAnchor.constraint(equalTo: albumCoverImageView.heightAnchor),
+            playlistCoverImageView.leftAnchor.constraint(equalTo: contentView.leftAnchor, constant: NewReleaseCollectionViewCell.PADDING),
+            playlistCoverImageView.topAnchor.constraint(equalTo: contentView.topAnchor, constant: NewReleaseCollectionViewCell.PADDING),
+            playlistCoverImageView.heightAnchor.constraint(equalToConstant: contentView.frame.height - NewReleaseCollectionViewCell.PADDING * 2),
+            playlistCoverImageView.widthAnchor.constraint(equalTo: playlistCoverImageView.heightAnchor),
 
-            trailingView.leftAnchor.constraint(equalTo: albumCoverImageView.rightAnchor, constant: NewReleaseCollectionViewCell.PADDING),
+            trailingView.leftAnchor.constraint(equalTo: playlistCoverImageView.rightAnchor, constant: NewReleaseCollectionViewCell.PADDING),
             trailingView.topAnchor.constraint(equalTo: contentView.topAnchor, constant: NewReleaseCollectionViewCell.PADDING),
             trailingView.rightAnchor.constraint(equalTo: contentView.rightAnchor, constant: -NewReleaseCollectionViewCell.PADDING),
             trailingView.bottomAnchor.constraint(equalTo: contentView.bottomAnchor, constant: -NewReleaseCollectionViewCell.PADDING)
@@ -105,13 +105,13 @@ class NewReleaseCollectionViewCell: UICollectionViewCell {
         albumNameLabel.text = nil
         numberOfTracksLabel.text = nil
         artistNameLabel.text = nil
-        albumCoverImageView.image = nil
+        playlistCoverImageView.image = nil
     }
 
     func configure(with viewModel: NewReleasesCellViewModel) {
         albumNameLabel.text = viewModel.name
         numberOfTracksLabel.text = "\(viewModel.numberOfTracks) Tracks"
         artistNameLabel.text = viewModel.artistName
-        albumCoverImageView.sd_setImage(with: viewModel.artworkURL)
+        playlistCoverImageView.sd_setImage(with: viewModel.artworkURL)
     }
 }
