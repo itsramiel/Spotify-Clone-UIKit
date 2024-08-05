@@ -65,6 +65,10 @@ class HomeViewController: UIViewController {
         collectionView.backgroundColor = .systemBackground
     }
 
+    private var albums = [Album]()
+    private var playlists = [Playlist]()
+    private var tracks = [Track]()
+
     private func fetchData() {
         let group = DispatchGroup()
         group.enter()
@@ -101,17 +105,17 @@ class HomeViewController: UIViewController {
         group.notify(queue: .main) {
             guard let newReleases, let featuredPlaylists, let recommendations else { return }
 
+            self.albums = newReleases.albums.items
+            self.playlists = featuredPlaylists.playlists.items
+            self.tracks = recommendations.tracks
             self.configureModels(
-                newAlbmus: newReleases.albums.items,
-                playlists: featuredPlaylists.playlists.items,
-                tracks: recommendations.tracks
             )
         }
     }
 
-    private func configureModels(newAlbmus: [Album], playlists: [Playlist], tracks: [Track]) {
+    private func configureModels() {
         sections.append(
-            .newReleases(viewModels: newAlbmus.map { NewReleasesCellViewModel(
+            .newReleases(viewModels: albums.map { NewReleasesCellViewModel(
                 name: $0.name, artworkURL: URL(string: $0.images.first?.url ?? ""), numberOfTracks: $0.totalTracks, artistName: $0.artists.first?.name ?? ""
             ) })
         )
@@ -256,6 +260,22 @@ extension HomeViewController: UICollectionViewDataSource, UICollectionViewDelega
 
             cell.configure(with: viewModels[indexPath.row])
             return cell
+        }
+    }
+
+    func collectionView(_: UICollectionView, didSelectItemAt indexPath: IndexPath) {
+        let section = sections[indexPath.section]
+        switch section {
+        case .newReleases:
+            let album = albums[indexPath.row]
+            let vc = AlbumViewController(album: album)
+            navigationController?.pushViewController(vc, animated: true)
+        case .featuredPlaylists:
+            let playlist = playlists[indexPath.row]
+            let vc = PlaylistViewController(playlist: playlist)
+            navigationController?.pushViewController(vc, animated: true)
+        case .recommendedTracks:
+            break
         }
     }
 }
