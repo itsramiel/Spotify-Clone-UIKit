@@ -197,20 +197,15 @@ class HomeViewController: UIViewController {
         case 2:
             fallthrough
         default:
-            let item = NSCollectionLayoutItem(layoutSize:
-                NSCollectionLayoutSize(
-                    widthDimension: .fractionalWidth(1),
-                    heightDimension: .fractionalHeight(1)
-                )
+            let size = NSCollectionLayoutSize(
+                widthDimension: .fractionalWidth(1),
+                heightDimension: .estimated(64)
             )
 
-            item.contentInsets = .init(top: 2, leading: 2, bottom: 2, trailing: 2)
+            let item = NSCollectionLayoutItem(layoutSize: size)
 
             let group = NSCollectionLayoutGroup.vertical(
-                layoutSize: NSCollectionLayoutSize(
-                    widthDimension: .fractionalWidth(1),
-                    heightDimension: .absolute(80)
-                ),
+                layoutSize: size,
                 subitems: Array(repeating: item, count: 1)
             )
 
@@ -251,7 +246,6 @@ extension HomeViewController: UICollectionViewDataSource, UICollectionViewDelega
             guard let cell = collectionView.dequeueReusableCell(
                 withReuseIdentifier: FeaturedPlaylistCollectionViewCell.identifier, for: indexPath
             ) as? FeaturedPlaylistCollectionViewCell else { fatalError("Invalid cell type") }
-            cell.backgroundColor = .systemBlue
 
             cell.configure(with: viewModels[indexPath.row])
             return cell
@@ -259,7 +253,8 @@ extension HomeViewController: UICollectionViewDataSource, UICollectionViewDelega
             guard let cell = collectionView.dequeueReusableCell(
                 withReuseIdentifier: RecommendedTrackCollectionViewCell.identifier, for: indexPath
             ) as? RecommendedTrackCollectionViewCell else { fatalError("Invalid cell type") }
-            cell.backgroundColor = .systemRed
+
+            cell.configure(with: viewModels[indexPath.row])
             return cell
         }
     }
