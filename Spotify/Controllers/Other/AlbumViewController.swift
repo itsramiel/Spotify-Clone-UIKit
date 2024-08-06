@@ -18,5 +18,10 @@ class AlbumViewController: UIViewController {
         title = album.name
         navigationItem.largeTitleDisplayMode = .never
         view.backgroundColor = .systemBackground
+
+        APIManager.shared.getAlbumDetailWith(albumId: album.id, completion: { result in
+            guard case let .success(album) = result else { return }
+            print(album)
+        })
     }
 }

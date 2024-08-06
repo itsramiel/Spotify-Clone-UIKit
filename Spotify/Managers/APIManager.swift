@@ -45,6 +45,54 @@ final class APIManager {
         })
     }
 
+    public func getAlbumDetailWith(albumId: String, completion: @escaping (Result<Album, Error>) -> Void) {
+        guard let url = URL(string: "\(Constants.baseUrl)/albums/\(albumId)") else {
+            fatalError("Invalid URL")
+        }
+
+        httpRequest(url: url, method: .GET, completion: { result in
+            switch result {
+            case let .success(data):
+                do {
+                    let jsonDecoder = JSONDecoder()
+                    jsonDecoder.keyDecodingStrategy = .convertFromSnakeCase
+
+                    try completion(.success(jsonDecoder.decode(Album.self, from: data)))
+                } catch {
+                    print(error)
+                    completion(.failure(error))
+                }
+            case let .failure(error):
+                completion(.failure(error))
+            }
+
+        })
+    }
+
+    public func getPlaylistDetailWith(playlistId: String, completion: @escaping (Result<Playlist, Error>) -> Void) {
+        guard let url = URL(string: "\(Constants.baseUrl)/playlists/\(playlistId)") else {
+            fatalError("Invalid URL")
+        }
+
+        httpRequest(url: url, method: .GET, completion: { result in
+            switch result {
+            case let .success(data):
+                do {
+                    let jsonDecoder = JSONDecoder()
+                    jsonDecoder.keyDecodingStrategy = .convertFromSnakeCase
+
+                    try completion(.success(jsonDecoder.decode(Playlist.self, from: data)))
+                } catch {
+                    print(error)
+                    completion(.failure(error))
+                }
+            case let .failure(error):
+                completion(.failure(error))
+            }
+
+        })
+    }
+
     public func getNewReleases(completion: @escaping (Result<NewReleasesResponse, Error>) -> Void) {
         guard let url = URL(string: "\(Constants.baseUrl)/browse/new-releases") else {
             fatalError("Invalid URL")

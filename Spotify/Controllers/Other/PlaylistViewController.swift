@@ -18,5 +18,10 @@ class PlaylistViewController: UIViewController {
         title = playlist.name
         navigationItem.largeTitleDisplayMode = .never
         view.backgroundColor = .systemBackground
+
+        APIManager.shared.getPlaylistDetailWith(playlistId: playlist.id, completion: { result in
+            guard case let .success(playlist) = result else { return }
+            print(playlist)
+        })
     }
 }
