@@ -18,7 +18,19 @@ class PlaylistViewController: UIViewController {
                 subitems: Array(repeating: item, count: 1)
             )
 
-            return NSCollectionLayoutSection(group: group)
+            let section = NSCollectionLayoutSection(group: group)
+
+            section.boundarySupplementaryItems = [
+                .init(
+                    layoutSize: NSCollectionLayoutSize(
+                        widthDimension: .fractionalWidth(1), heightDimension: .fractionalWidth(1)
+                    ),
+                    elementKind: UICollectionView.elementKindSectionHeader,
+                    alignment: .top
+                )
+            ]
+
+            return section
         })
     )
 
@@ -65,6 +77,11 @@ class PlaylistViewController: UIViewController {
             RecommendedTrackCollectionViewCell.self,
             forCellWithReuseIdentifier: RecommendedTrackCollectionViewCell.identifier
         )
+        collectionView.register(
+            PlaylistHeaderCollectionReusableView.self,
+            forSupplementaryViewOfKind: UICollectionView.elementKindSectionHeader,
+            withReuseIdentifier: PlaylistHeaderCollectionReusableView.identifier
+        )
 
         collectionView.translatesAutoresizingMaskIntoConstraints = false
 
@@ -86,7 +103,25 @@ extension PlaylistViewController: UICollectionViewDataSource, UICollectionViewDe
 
     func collectionView(_: UICollectionView, numberOfItemsInSection _: Int) -> Int {
         return trackViewModels.count
-   }
+    }
+    
+    func collectionView(_ collectionView: UICollectionView, viewForSupplementaryElementOfKind kind: String, at indexPath: IndexPath) -> UICollectionReusableView {
+        guard kind == UICollectionView.elementKindSectionHeader else {
+            return UICollectionReusableView()
+        }
+        
+        guard let cell = collectionView.dequeueReusableSupplementaryView(
+            ofKind: UICollectionView.elementKindSectionHeader,
+            withReuseIdentifier: PlaylistHeaderCollectionReusableView.identifier,
+            for: indexPath
+        ) as? PlaylistHeaderCollectionReusableView else {
+            return UICollectionReusableView()
+        }
+        
+        cell.configure(with: PlaylistHeaderViewModel(name: playlist.name, ownerName: playlist.owner.displayName, description: playlist.description, artworkUrl: URL(string: playlist.images.first?.url ?? "")))
+        
+        return cell
+    }
 
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
         guard let cell = collectionView.dequeueReusableCell(withReuseIdentifier: RecommendedTrackCollectionViewCell.identifier, for: indexPath) as? RecommendedTrackCollectionViewCell else {
