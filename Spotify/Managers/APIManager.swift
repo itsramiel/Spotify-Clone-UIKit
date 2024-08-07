@@ -69,7 +69,7 @@ final class APIManager {
         })
     }
 
-    public func getPlaylistDetailWith(playlistId: String, completion: @escaping (Result<Playlist, Error>) -> Void) {
+    public func getPlaylistDetailWith(playlistId: String, completion: @escaping (Result<PlaylistDetail, Error>) -> Void) {
         guard let url = URL(string: "\(Constants.baseUrl)/playlists/\(playlistId)") else {
             fatalError("Invalid URL")
         }
@@ -81,7 +81,7 @@ final class APIManager {
                     let jsonDecoder = JSONDecoder()
                     jsonDecoder.keyDecodingStrategy = .convertFromSnakeCase
 
-                    try completion(.success(jsonDecoder.decode(Playlist.self, from: data)))
+                    try completion(.success(jsonDecoder.decode(PlaylistDetail.self, from: data)))
                 } catch {
                     print(error)
                     completion(.failure(error))

@@ -1,7 +1,7 @@
 import UIKit
 
 class RecommendedTrackCollectionViewCell: UICollectionViewCell {
-    static let IMAGE_SIZE: CGFloat = 64
+    static let IMAGE_SIZE: CGFloat = 48
     static let identifier = "RecommendedTrackCollectionViewCell"
     static let PADDING: CGFloat = 4
 
@@ -22,7 +22,6 @@ class RecommendedTrackCollectionViewCell: UICollectionViewCell {
     private let trackNameLabel: UILabel = {
         let label = UILabel()
         label.font = .systemFont(ofSize: 16, weight: .semibold)
-        label.setContentHuggingPriority(.defaultHigh, for: .vertical)
         label.numberOfLines = 0
 
         return label
@@ -46,7 +45,6 @@ class RecommendedTrackCollectionViewCell: UICollectionViewCell {
         let stack = UIStackView()
         stack.spacing = 8
         stack.axis = .vertical
-        stack.backgroundColor = .secondarySystemBackground
 
         return stack
     }()
@@ -55,6 +53,8 @@ class RecommendedTrackCollectionViewCell: UICollectionViewCell {
         let stack = UIStackView()
         stack.axis = .horizontal
         stack.spacing = 8
+        stack.backgroundColor = .secondarySystemBackground
+        stack.alignment = .fill
 
         return stack
     }()
@@ -68,7 +68,7 @@ class RecommendedTrackCollectionViewCell: UICollectionViewCell {
 
         NSLayoutConstraint.activate([
             mainStack.leftAnchor.constraint(equalTo: contentView.leftAnchor, constant: RecommendedTrackCollectionViewCell.PADDING),
-            mainStack.topAnchor.constraint(equalTo: contentView.topAnchor),
+            mainStack.topAnchor.constraint(equalTo: contentView.topAnchor, constant: RecommendedTrackCollectionViewCell.PADDING),
             mainStack.rightAnchor.constraint(equalTo: contentView.rightAnchor, constant: -RecommendedTrackCollectionViewCell.PADDING),
             mainStack.bottomAnchor.constraint(equalTo: contentView.bottomAnchor, constant: -RecommendedTrackCollectionViewCell.PADDING)
         ])
