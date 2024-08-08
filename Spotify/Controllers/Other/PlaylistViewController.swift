@@ -37,6 +37,22 @@ class PlaylistViewController: UIViewController {
     init(playlist: Playlist) {
         self.playlist = playlist
         super.init(nibName: nil, bundle: nil)
+        
+        navigationItem.rightBarButtonItem = UIBarButtonItem(
+            barButtonSystemItem: .action,
+            target: self,
+            action: #selector(didTapShare)
+        )
+    }
+    
+    @objc private func didTapShare() {
+        guard let url = playlist.externalUrls["spotify"] else { return }
+        let vc = UIActivityViewController(
+            activityItems: [url],
+            applicationActivities: []
+        )
+        
+        present(vc, animated: true)
     }
 
     @available(*, unavailable)
@@ -96,6 +112,12 @@ class PlaylistViewController: UIViewController {
     }
 }
 
+extension PlaylistViewController: PlaylistHeaderCollectionReusableViewDelegate {
+    func playlistHeaderCollectionReusableViewDidTapPlayAll(_ header: PlaylistHeaderCollectionReusableView) {
+       print("Playing all")
+    }
+}
+
 extension PlaylistViewController: UICollectionViewDataSource, UICollectionViewDelegate {
     func numberOfSections(in _: UICollectionView) -> Int {
         return 1
@@ -118,6 +140,7 @@ extension PlaylistViewController: UICollectionViewDataSource, UICollectionViewDe
             return UICollectionReusableView()
         }
         
+        cell.delegate = self
         cell.configure(with: PlaylistHeaderViewModel(name: playlist.name, ownerName: playlist.owner.displayName, description: playlist.description, artworkUrl: URL(string: playlist.images.first?.url ?? "")))
         
         return cell
@@ -133,3 +156,4 @@ extension PlaylistViewController: UICollectionViewDataSource, UICollectionViewDe
         return cell
     }
 }
+

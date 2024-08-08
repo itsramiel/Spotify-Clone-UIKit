@@ -7,13 +7,8 @@ class RecommendedTrackCollectionViewCell: UICollectionViewCell {
 
     private let trackCoverImageView: UIImageView = {
         let imageView = UIImageView()
-        imageView.contentMode = .scaleAspectFill
-
         imageView.translatesAutoresizingMaskIntoConstraints = false
-        NSLayoutConstraint.activate([
-            imageView.widthAnchor.constraint(equalToConstant: RecommendedTrackCollectionViewCell.IMAGE_SIZE),
-            imageView.heightAnchor.constraint(equalToConstant: RecommendedTrackCollectionViewCell.IMAGE_SIZE)
-        ])
+        imageView.contentMode = .scaleAspectFill
         imageView.clipsToBounds = true
 
         return imageView
@@ -21,6 +16,7 @@ class RecommendedTrackCollectionViewCell: UICollectionViewCell {
 
     private let trackNameLabel: UILabel = {
         let label = UILabel()
+        label.translatesAutoresizingMaskIntoConstraints = false
         label.font = .systemFont(ofSize: 16, weight: .semibold)
         label.numberOfLines = 0
 
@@ -29,20 +25,15 @@ class RecommendedTrackCollectionViewCell: UICollectionViewCell {
 
     private let artistNameLabel: UILabel = {
         let label = UILabel()
+        label.translatesAutoresizingMaskIntoConstraints = false
         label.font = .systemFont(ofSize: 12, weight: .light)
 
         return label
     }()
 
-    private let dummyView: UIView = {
-        let view = UIView()
-        view.setContentHuggingPriority(.dragThatCanResizeScene, for: .vertical)
-
-        return view
-    }()
-
     private let labelStack: UIStackView = {
         let stack = UIStackView()
+        stack.translatesAutoresizingMaskIntoConstraints = false
         stack.spacing = 8
         stack.axis = .vertical
 
@@ -51,10 +42,13 @@ class RecommendedTrackCollectionViewCell: UICollectionViewCell {
 
     private let mainStack: UIStackView = {
         let stack = UIStackView()
+        stack.translatesAutoresizingMaskIntoConstraints = false
         stack.axis = .horizontal
         stack.spacing = 8
         stack.backgroundColor = .secondarySystemBackground
-        stack.alignment = .fill
+        stack.alignment = .center
+        stack.layoutMargins = UIEdgeInsets(top: 4, left: 4, bottom: 4, right: 4)
+        stack.isLayoutMarginsRelativeArrangement = true
 
         return stack
     }()
@@ -67,6 +61,9 @@ class RecommendedTrackCollectionViewCell: UICollectionViewCell {
         mainStack.translatesAutoresizingMaskIntoConstraints = false
 
         NSLayoutConstraint.activate([
+            trackCoverImageView.widthAnchor.constraint(equalToConstant: RecommendedTrackCollectionViewCell.IMAGE_SIZE),
+            trackCoverImageView.heightAnchor.constraint(equalToConstant: RecommendedTrackCollectionViewCell.IMAGE_SIZE),
+            
             mainStack.leftAnchor.constraint(equalTo: contentView.leftAnchor, constant: RecommendedTrackCollectionViewCell.PADDING),
             mainStack.topAnchor.constraint(equalTo: contentView.topAnchor, constant: RecommendedTrackCollectionViewCell.PADDING),
             mainStack.rightAnchor.constraint(equalTo: contentView.rightAnchor, constant: -RecommendedTrackCollectionViewCell.PADDING),
@@ -75,7 +72,6 @@ class RecommendedTrackCollectionViewCell: UICollectionViewCell {
 
         labelStack.addArrangedSubview(trackNameLabel)
         labelStack.addArrangedSubview(artistNameLabel)
-        labelStack.addArrangedSubview(dummyView)
 
         mainStack.addArrangedSubview(trackCoverImageView)
         mainStack.addArrangedSubview(labelStack)

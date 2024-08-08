@@ -78,26 +78,18 @@ struct PlaylistDetail: Codable {
 
     struct Album: Codable {
         let availableMarkets: [String]
-        let type, albumType: AlbumTypeEnum
+        let type, albumType: String
         let href: String
         let id: String
         let images: [Image]
         let name, releaseDate: String
-        let releaseDatePrecision: ReleaseDatePrecision
+        let releaseDatePrecision: String
         let uri: String
         let artists: [Owner]
         let externalUrls: [String: String]
         let totalTracks: Int
     }
 
-    enum AlbumTypeEnum: String, Codable {
-        case album
-        case single
-    }
-
-    enum ReleaseDatePrecision: String, Codable {
-        case day
-    }
 
     // MARK: - ExternalIDS
 
@@ -109,7 +101,7 @@ struct PlaylistDetail: Codable {
         case track
     }
 
-    let collaborative: Bool
+    let collaborative: Bool?
     let description: String
     let externalUrls: [String: String]
     let followers: Followers
