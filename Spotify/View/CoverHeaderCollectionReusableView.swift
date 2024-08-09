@@ -8,18 +8,18 @@
 import UIKit
 import SDWebImage
 
-protocol PlaylistHeaderCollectionReusableViewDelegate: AnyObject {
-    func playlistHeaderCollectionReusableViewDidTapPlayAll(_ header: PlaylistHeaderCollectionReusableView)
+protocol CoverHeaderCollectionReusableViewDelegate: AnyObject {
+    func playlistHeaderCollectionReusableViewDidTapPlayAll(_ header: CoverHeaderCollectionReusableView)
 }
 
-final class PlaylistHeaderCollectionReusableView: UICollectionReusableView {
-    static let identifier = "PlaylistHeaderCollectionReusableView"
+final class CoverHeaderCollectionReusableView: UICollectionReusableView {
+    static let identifier = "CoverHeaderCollectionReusableView"
     
-    weak var delegate: PlaylistHeaderCollectionReusableViewDelegate?
+    weak var delegate: CoverHeaderCollectionReusableViewDelegate?
     
     private static let PLAY_BUTTON_SIZE: CGFloat = 60
     
-    private let nameLabel: UILabel = {
+    private let titleLabel: UILabel = {
         let label = UILabel()
         label.translatesAutoresizingMaskIntoConstraints = false
         label.font = .systemFont(ofSize: 22, weight: .semibold)
@@ -28,7 +28,7 @@ final class PlaylistHeaderCollectionReusableView: UICollectionReusableView {
         return label
     }()
     
-    private let descriptionLabel: UILabel = {
+    private let subtitle1: UILabel = {
         let label = UILabel()
         label.translatesAutoresizingMaskIntoConstraints = false
         label.font = .systemFont(ofSize: 18, weight: .regular)
@@ -36,10 +36,10 @@ final class PlaylistHeaderCollectionReusableView: UICollectionReusableView {
         return label
     }()
     
-    private let ownerLabel: UILabel = {
+    private let subtitle2: UILabel = {
         let label = UILabel()
         label.translatesAutoresizingMaskIntoConstraints = false
-        label.font = .systemFont(ofSize: 18, weight: .light)
+        label.font = .systemFont(ofSize: 14, weight: .light)
         
         return label
     }()
@@ -101,8 +101,8 @@ final class PlaylistHeaderCollectionReusableView: UICollectionReusableView {
             row.trailingAnchor.constraint(equalTo: trailingAnchor, constant: -10),
             row.bottomAnchor.constraint(equalTo: bottomAnchor, constant: -10),
 
-            playButton.widthAnchor.constraint(equalToConstant: PlaylistHeaderCollectionReusableView.PLAY_BUTTON_SIZE),
-            playButton.heightAnchor.constraint(equalToConstant: PlaylistHeaderCollectionReusableView.PLAY_BUTTON_SIZE)
+            playButton.widthAnchor.constraint(equalToConstant: CoverHeaderCollectionReusableView.PLAY_BUTTON_SIZE),
+            playButton.heightAnchor.constraint(equalToConstant: CoverHeaderCollectionReusableView.PLAY_BUTTON_SIZE)
         ])
         
 
@@ -112,14 +112,14 @@ final class PlaylistHeaderCollectionReusableView: UICollectionReusableView {
         stackView.spacing = 12
         stackView.axis = .vertical
         
-        if let text = nameLabel.text, text.count > 0 {
-            stackView.addArrangedSubview(nameLabel)
+        if let text = titleLabel.text, text.count > 0 {
+            stackView.addArrangedSubview(titleLabel)
         }
-        if let text = descriptionLabel.text, text.count > 0 {
-            stackView.addArrangedSubview(descriptionLabel)
+        if let text = subtitle1.text, text.count > 0 {
+            stackView.addArrangedSubview(subtitle1)
         }
-        if let text = ownerLabel.text, text.count > 0 {
-            stackView.addArrangedSubview(ownerLabel)
+        if let text = subtitle2.text, text.count > 0 {
+            stackView.addArrangedSubview(subtitle2)
         }
         
 
@@ -133,9 +133,10 @@ final class PlaylistHeaderCollectionReusableView: UICollectionReusableView {
         super.layoutSubviews()
     }
     
-    func configure(with viewModel: PlaylistHeaderViewModel) {
-        nameLabel.text = viewModel.name
-        ownerLabel.text = viewModel.ownerName
+    func configure(with viewModel: CoverHeaderViewModel) {
+        titleLabel.text = viewModel.title
+        subtitle1.text = viewModel.subtitle1
+        subtitle2.text = viewModel.subtitle2
         imageView.sd_setImage(with: viewModel.artworkUrl)
         
         self.setupConstraints()

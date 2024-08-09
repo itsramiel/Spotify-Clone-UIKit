@@ -7,9 +7,9 @@
 
 import Foundation
 
-struct PlaylistHeaderViewModel {
-    let name: String
-    let ownerName: String
-    let description: String
+struct CoverHeaderViewModel {
+    let title: String
+    let subtitle1: String
+    let subtitle2: String
     let artworkUrl: URL?
 }

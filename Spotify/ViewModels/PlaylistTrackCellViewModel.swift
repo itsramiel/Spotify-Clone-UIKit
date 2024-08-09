@@ -1,6 +1,6 @@
 import Foundation
 
-class RecommendedTrackCellViewModel {
+class PlaylistTrackCellViewModel {
     let name: String
     let artworkURL: URL?
     let artistName: String

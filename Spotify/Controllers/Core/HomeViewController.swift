@@ -10,7 +10,7 @@ import UIKit
 enum BrowseSectionType {
     case newReleases(viewModels: [NewReleasesCellViewModel])
     case featuredPlaylists(viewModels: [FeaturedPlaylistCellViewModel])
-    case recommendedTracks(viewModels: [RecommendedTrackCellViewModel])
+    case recommendedTracks(viewModels: [PlaylistTrackCellViewModel])
     
     var title: String {
         switch self {
@@ -66,7 +66,7 @@ class HomeViewController: UIViewController {
         view.addSubview(collectionView)
         collectionView.register(NewReleaseCollectionViewCell.self, forCellWithReuseIdentifier: NewReleaseCollectionViewCell.identifier)
         collectionView.register(FeaturedPlaylistCollectionViewCell.self, forCellWithReuseIdentifier: FeaturedPlaylistCollectionViewCell.identifier)
-        collectionView.register(RecommendedTrackCollectionViewCell.self, forCellWithReuseIdentifier: RecommendedTrackCollectionViewCell.identifier)
+        collectionView.register(PlaylistTrackCollectionViewCell.self, forCellWithReuseIdentifier: PlaylistTrackCollectionViewCell.identifier)
         collectionView.register(HomeHeaderCollectionReusableView.self, forSupplementaryViewOfKind: UICollectionView.elementKindSectionHeader, withReuseIdentifier: HomeHeaderCollectionReusableView.identifier)
         
         collectionView.dataSource = self
@@ -136,7 +136,7 @@ class HomeViewController: UIViewController {
         )
         
         sections.append(
-            .recommendedTracks(viewModels: tracks.map { RecommendedTrackCellViewModel(
+            .recommendedTracks(viewModels: tracks.map { PlaylistTrackCellViewModel(
                 name: $0.name, artworkURL: URL(string: $0.album.images.first?.url ?? ""), artistName: $0.artists.first?.name ?? ""
             ) })
         )
@@ -275,8 +275,8 @@ extension HomeViewController: UICollectionViewDataSource, UICollectionViewDelega
             return cell
         case let .recommendedTracks(viewModels: viewModels):
             guard let cell = collectionView.dequeueReusableCell(
-                withReuseIdentifier: RecommendedTrackCollectionViewCell.identifier, for: indexPath
-            ) as? RecommendedTrackCollectionViewCell else { fatalError("Invalid cell type") }
+                withReuseIdentifier: PlaylistTrackCollectionViewCell.identifier, for: indexPath
+            ) as? PlaylistTrackCollectionViewCell else { fatalError("Invalid cell type") }
             
             cell.configure(with: viewModels[indexPath.row])
             return cell

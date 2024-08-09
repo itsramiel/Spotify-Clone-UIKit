@@ -2,32 +2,15 @@ import UIKit
 
 class PlaylistViewController: UIViewController {
     private let playlist: Playlist
-    private var trackViewModels = [RecommendedTrackCellViewModel]()
+    private var trackViewModels = [PlaylistTrackCellViewModel]()
 
     private let collectionView = UICollectionView(
         frame: .zero,
         collectionViewLayout: UICollectionViewCompositionalLayout(sectionProvider: { _, _ in
-            let size = NSCollectionLayoutSize(
-                widthDimension: .fractionalWidth(1), heightDimension: .estimated(64)
-            )
-
-            let item = NSCollectionLayoutItem(layoutSize: size)
-
-            let group = NSCollectionLayoutGroup.vertical(
-                layoutSize: size,
-                subitems: Array(repeating: item, count: 1)
-            )
-
-            let section = NSCollectionLayoutSection(group: group)
-
+            let section = CollectionSectionBuilder.getTracksSection()
+            
             section.boundarySupplementaryItems = [
-                .init(
-                    layoutSize: NSCollectionLayoutSize(
-                        widthDimension: .fractionalWidth(1), heightDimension: .fractionalWidth(1)
-                    ),
-                    elementKind: UICollectionView.elementKindSectionHeader,
-                    alignment: .top
-                )
+                CollectionSectionBuilder.getCoverHeaderSupplementaryItem()
             ]
 
             return section
@@ -70,7 +53,7 @@ class PlaylistViewController: UIViewController {
         APIManager.shared.getPlaylistDetailWith(playlistId: playlist.id, completion: { result in
             guard case let .success(playlist) = result else { return }
             self.trackViewModels = playlist.tracks.items.map {
-                RecommendedTrackCellViewModel(
+                PlaylistTrackCellViewModel(
                     name: $0.track.name,
                     artworkURL: URL(string: $0.track.album.images.first?.url ?? ""),
                     artistName: $0.track.artists.first?.name ?? ""
@@ -90,13 +73,13 @@ class PlaylistViewController: UIViewController {
         collectionView.dataSource = self
 
         collectionView.register(
-            RecommendedTrackCollectionViewCell.self,
-            forCellWithReuseIdentifier: RecommendedTrackCollectionViewCell.identifier
+            PlaylistTrackCollectionViewCell.self,
+            forCellWithReuseIdentifier: PlaylistTrackCollectionViewCell.identifier
         )
         collectionView.register(
-            PlaylistHeaderCollectionReusableView.self,
+            CoverHeaderCollectionReusableView.self,
             forSupplementaryViewOfKind: UICollectionView.elementKindSectionHeader,
-            withReuseIdentifier: PlaylistHeaderCollectionReusableView.identifier
+            withReuseIdentifier: CoverHeaderCollectionReusableView.identifier
         )
 
         collectionView.translatesAutoresizingMaskIntoConstraints = false
@@ -112,8 +95,8 @@ class PlaylistViewController: UIViewController {
     }
 }
 
-extension PlaylistViewController: PlaylistHeaderCollectionReusableViewDelegate {
-    func playlistHeaderCollectionReusableViewDidTapPlayAll(_ header: PlaylistHeaderCollectionReusableView) {
+extension PlaylistViewController: CoverHeaderCollectionReusableViewDelegate {
+    func playlistHeaderCollectionReusableViewDidTapPlayAll(_ header: CoverHeaderCollectionReusableView) {
        print("Playing all")
     }
 }
@@ -134,20 +117,20 @@ extension PlaylistViewController: UICollectionViewDataSource, UICollectionViewDe
         
         guard let cell = collectionView.dequeueReusableSupplementaryView(
             ofKind: UICollectionView.elementKindSectionHeader,
-            withReuseIdentifier: PlaylistHeaderCollectionReusableView.identifier,
+            withReuseIdentifier: CoverHeaderCollectionReusableView.identifier,
             for: indexPath
-        ) as? PlaylistHeaderCollectionReusableView else {
+        ) as? CoverHeaderCollectionReusableView else {
             return UICollectionReusableView()
         }
         
         cell.delegate = self
-        cell.configure(with: PlaylistHeaderViewModel(name: playlist.name, ownerName: playlist.owner.displayName, description: playlist.description, artworkUrl: URL(string: playlist.images.first?.url ?? "")))
+        cell.configure(with: CoverHeaderViewModel(title: playlist.name, subtitle1: playlist.owner.displayName, subtitle2: playlist.description, artworkUrl: URL(string: playlist.images.first?.url ?? "")))
         
         return cell
     }
 
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
-        guard let cell = collectionView.dequeueReusableCell(withReuseIdentifier: RecommendedTrackCollectionViewCell.identifier, for: indexPath) as? RecommendedTrackCollectionViewCell else {
+        guard let cell = collectionView.dequeueReusableCell(withReuseIdentifier: PlaylistTrackCollectionViewCell.identifier, for: indexPath) as? PlaylistTrackCollectionViewCell else {
             fatalError("Invalid cell type")
         }
 

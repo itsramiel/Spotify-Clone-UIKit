@@ -1,8 +1,8 @@
 import UIKit
 
-class RecommendedTrackCollectionViewCell: UICollectionViewCell {
+class PlaylistTrackCollectionViewCell: UICollectionViewCell {
     static let IMAGE_SIZE: CGFloat = 48
-    static let identifier = "RecommendedTrackCollectionViewCell"
+    static let identifier = "PlaylistTrackCollectionViewCell"
     static let PADDING: CGFloat = 4
 
     private let trackCoverImageView: UIImageView = {
@@ -61,13 +61,13 @@ class RecommendedTrackCollectionViewCell: UICollectionViewCell {
         mainStack.translatesAutoresizingMaskIntoConstraints = false
 
         NSLayoutConstraint.activate([
-            trackCoverImageView.widthAnchor.constraint(equalToConstant: RecommendedTrackCollectionViewCell.IMAGE_SIZE),
-            trackCoverImageView.heightAnchor.constraint(equalToConstant: RecommendedTrackCollectionViewCell.IMAGE_SIZE),
+            trackCoverImageView.widthAnchor.constraint(equalToConstant: PlaylistTrackCollectionViewCell.IMAGE_SIZE),
+            trackCoverImageView.heightAnchor.constraint(equalToConstant: PlaylistTrackCollectionViewCell.IMAGE_SIZE),
             
-            mainStack.leftAnchor.constraint(equalTo: contentView.leftAnchor, constant: RecommendedTrackCollectionViewCell.PADDING),
-            mainStack.topAnchor.constraint(equalTo: contentView.topAnchor, constant: RecommendedTrackCollectionViewCell.PADDING),
-            mainStack.rightAnchor.constraint(equalTo: contentView.rightAnchor, constant: -RecommendedTrackCollectionViewCell.PADDING),
-            mainStack.bottomAnchor.constraint(equalTo: contentView.bottomAnchor, constant: -RecommendedTrackCollectionViewCell.PADDING)
+            mainStack.leftAnchor.constraint(equalTo: contentView.leftAnchor, constant: PlaylistTrackCollectionViewCell.PADDING),
+            mainStack.topAnchor.constraint(equalTo: contentView.topAnchor, constant: PlaylistTrackCollectionViewCell.PADDING),
+            mainStack.rightAnchor.constraint(equalTo: contentView.rightAnchor, constant: -PlaylistTrackCollectionViewCell.PADDING),
+            mainStack.bottomAnchor.constraint(equalTo: contentView.bottomAnchor, constant: -PlaylistTrackCollectionViewCell.PADDING)
         ])
 
         labelStack.addArrangedSubview(trackNameLabel)
@@ -89,9 +89,13 @@ class RecommendedTrackCollectionViewCell: UICollectionViewCell {
         trackCoverImageView.image = nil
     }
 
-    func configure(with viewModel: RecommendedTrackCellViewModel) {
+    func configure(with viewModel: PlaylistTrackCellViewModel) {
         trackNameLabel.text = viewModel.name
         artistNameLabel.text = viewModel.artistName
-        trackCoverImageView.sd_setImage(with: viewModel.artworkURL)
+        if let artworkUrl = viewModel.artworkURL {
+            trackCoverImageView.sd_setImage(with: artworkUrl)
+        } else {
+            trackCoverImageView.isHidden = true
+        }
     }
 }

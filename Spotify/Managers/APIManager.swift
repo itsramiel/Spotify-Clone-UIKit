@@ -45,7 +45,7 @@ final class APIManager {
         })
     }
 
-    public func getAlbumDetailWith(albumId: String, completion: @escaping (Result<Album, Error>) -> Void) {
+    public func getAlbumDetailWith(albumId: String, completion: @escaping (Result<AlbumDetail, Error>) -> Void) {
         guard let url = URL(string: "\(Constants.baseUrl)/albums/\(albumId)") else {
             fatalError("Invalid URL")
         }
@@ -57,7 +57,7 @@ final class APIManager {
                     let jsonDecoder = JSONDecoder()
                     jsonDecoder.keyDecodingStrategy = .convertFromSnakeCase
 
-                    try completion(.success(jsonDecoder.decode(Album.self, from: data)))
+                    try completion(.success(jsonDecoder.decode(AlbumDetail.self, from: data)))
                 } catch {
                     print(error)
                     completion(.failure(error))
