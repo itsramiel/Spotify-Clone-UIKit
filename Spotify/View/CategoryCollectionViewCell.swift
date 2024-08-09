@@ -6,9 +6,10 @@
 //
 
 import UIKit
+import SDWebImage
 
-class GenreCollectionViewCell: UICollectionViewCell {
-    static let identifier = "GenreCollectionViewCell"
+class CategoryCollectionViewCell: UICollectionViewCell {
+    static let identifier = "CategoryCollectionViewCell"
     private static let IMAGE_SIZE: CGFloat = 60
     
     private let colors: [UIColor] = [
@@ -82,8 +83,8 @@ class GenreCollectionViewCell: UICollectionViewCell {
         contentView.addSubview(mainStack)
         
         NSLayoutConstraint.activate([
-            imageView.widthAnchor.constraint(equalToConstant: GenreCollectionViewCell.IMAGE_SIZE),
-            imageView.heightAnchor.constraint(equalToConstant: GenreCollectionViewCell.IMAGE_SIZE),
+            imageView.widthAnchor.constraint(equalToConstant: CategoryCollectionViewCell.IMAGE_SIZE),
+            imageView.heightAnchor.constraint(equalToConstant: CategoryCollectionViewCell.IMAGE_SIZE),
 
             mainStack.leadingAnchor.constraint(equalTo: contentView.leadingAnchor),
             mainStack.trailingAnchor.constraint(equalTo: contentView.trailingAnchor),
@@ -92,8 +93,9 @@ class GenreCollectionViewCell: UICollectionViewCell {
         ])
     }
     
-    func configure(with title: String){
-        label.text = title
+    func configure(with viewModel: CategoryCollectionViewCellViewModel){
+        label.text = viewModel.name
+        imageView.sd_setImage(with: viewModel.artowrkUrl)
         contentView.backgroundColor = colors.randomElement()
     }
 }

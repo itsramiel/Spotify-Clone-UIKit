@@ -44,6 +44,83 @@ final class APIManager {
 
         })
     }
+    
+    struct GetCategoriesResponse: Codable {
+        struct Categories: Codable {
+            let href: String
+            let items: [Category]
+            let limit: Int
+            let next: String?
+            let offset: Int
+            let previous: String?
+            let total: Int
+        }
+        
+        let categories: Categories
+    }
+    
+    public func getCategories(completion: @escaping (Result<GetCategoriesResponse, Error>) -> Void) {
+        guard let url = URL(string: "\(Constants.baseUrl)/browse/categories") else {
+            fatalError("Invalid URL")
+        }
+
+        httpRequest(url: url, method: .GET, completion: { result in
+            switch result {
+            case let .success(data):
+                do {
+                    let jsonDecoder = JSONDecoder()
+                    jsonDecoder.keyDecodingStrategy = .convertFromSnakeCase
+
+                    try completion(.success(jsonDecoder.decode(GetCategoriesResponse.self, from: data)))
+                } catch {
+                    print(error)
+                    completion(.failure(error))
+                }
+            case let .failure(error):
+                completion(.failure(error))
+            }
+
+        })
+    }
+    
+    struct GetPlaylistsForCategoryResponse: Codable {
+        struct Playlists: Codable {
+            let href: String?
+            let limit: Int
+            let next: String?
+            let previous: String?
+            let offset: Int
+            let total: Int
+            let items: [Playlist]
+        }
+        
+        let message: String
+        let playlists: Playlists
+    }
+    
+    public func getPlaylistsForCategory(with id: String, completion: @escaping (Result<GetPlaylistsForCategoryResponse, Error>) -> Void) {
+        guard let url = URL(string: "\(Constants.baseUrl)/browse/categories/\(id)/playlists") else {
+            fatalError("Invalid URL")
+        }
+
+        httpRequest(url: url, method: .GET, completion: { result in
+            switch result {
+            case let .success(data):
+                do {
+                    let jsonDecoder = JSONDecoder()
+                    jsonDecoder.keyDecodingStrategy = .convertFromSnakeCase
+
+                    try completion(.success(jsonDecoder.decode(GetPlaylistsForCategoryResponse.self, from: data)))
+                } catch {
+                    print(error)
+                    completion(.failure(error))
+                }
+            case let .failure(error):
+                completion(.failure(error))
+            }
+
+        })
+    }
 
     public func getAlbumDetailWith(albumId: String, completion: @escaping (Result<AlbumDetail, Error>) -> Void) {
         guard let url = URL(string: "\(Constants.baseUrl)/albums/\(albumId)") else {
