@@ -100,6 +100,10 @@ extension SearchViewController: UICollectionViewDelegate, UICollectionViewDataSo
         return categories.count
     }
     
+    func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
+        let vc = CategoryViewController(category: categories[indexPath.row])
+        navigationController?.pushViewController(vc, animated: true)
+    }
     
 }
 

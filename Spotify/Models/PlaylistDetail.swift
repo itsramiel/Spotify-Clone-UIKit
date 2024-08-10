@@ -110,7 +110,7 @@ struct PlaylistDetail: Codable {
     let images: [Image]
     let name: String
     let owner: Owner
-    let primaryColor: String
+    let primaryColor: String?
     let snapshotId: String
     let tracks: Tracks
     let type, uri: String

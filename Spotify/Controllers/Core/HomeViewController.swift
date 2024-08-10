@@ -82,7 +82,6 @@ class HomeViewController: UIViewController {
         let group = DispatchGroup()
         group.enter()
         group.enter()
-        group.enter()
         
         var newReleases: NewReleasesResponse?
         var featuredPlaylists: FeaturedPlaylistsResponse?
@@ -104,19 +103,19 @@ class HomeViewController: UIViewController {
             featuredPlaylists = response
         })
         // Recommended Tracks
-        APIManager.shared.getRecommendations(completion: { result in
-            defer { group.leave() }
-            
-            guard case let .success(response) = result else { return }
-            recommendations = response
-        })
+//        APIManager.shared.getRecommendations(completion: { result in
+//            defer { group.leave() }
+//            
+//            guard case let .success(response) = result else { return }
+//            recommendations = response
+//        })
         
         group.notify(queue: .main) {
-            guard let newReleases, let featuredPlaylists, let recommendations else { return }
+            guard let newReleases, let featuredPlaylists/*, let recommendations*/ else { return }
             
             self.albums = newReleases.albums.items
             self.playlists = featuredPlaylists.playlists.items
-            self.tracks = recommendations.tracks
+//            self.tracks = recommendations.tracks
             self.configureModels(
             )
         }
@@ -201,21 +200,21 @@ class HomeViewController: UIViewController {
             let item = NSCollectionLayoutItem(layoutSize:
                                                 NSCollectionLayoutSize(
                                                     widthDimension: .fractionalWidth(1),
-                                                    heightDimension: .fractionalHeight(0.5)
+                                                    heightDimension: .uniformAcrossSiblings(estimate: 60)
                                                 )
             )
             
-            item.contentInsets = .init(top: 0, leading: 0, bottom: 4, trailing: 4)
-            
             let verticalGroup = NSCollectionLayoutGroup.vertical(
                 layoutSize: NSCollectionLayoutSize(
-                    widthDimension: .absolute(FeaturedPlaylistCollectionViewCell.WIDTH),
-                    heightDimension: .absolute(FeaturedPlaylistCollectionViewCell.ESTIMATED_HEIGHT * 2)
+                    widthDimension: .fractionalWidth(0.4),
+                    heightDimension: .uniformAcrossSiblings(estimate: 120)
                 ),
                 subitems: Array(repeating: item, count: 2)
             )
+            verticalGroup.interItemSpacing = .fixed(12)
             
             let section = NSCollectionLayoutSection(group: verticalGroup)
+            section.interGroupSpacing = 12
             section.orthogonalScrollingBehavior = .continuous
             section.boundarySupplementaryItems = supplementaryViews
             return section

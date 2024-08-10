@@ -3,56 +3,31 @@ import UIKit
 class FeaturedPlaylistCollectionViewCell: UICollectionViewCell {
     static let identifier = "FeaturedPlaylistCollectionViewCell"
 
-    private static let PADDING: CGFloat = 4
-    private static let MAIN_STACK_GAP: CGFloat = 4
-    private static let LABELS_STACK_GAP: CGFloat = 4
-    private static let PLAYLIST_COVER_IMAGE_SIZE: CGFloat = 160
-    private static let PLAYLIST_NAME_NUMBER_OF_LINES = 2
-    private static let PLAYLIST_NAME_FONT_SIZE: CGFloat = 18
-    private static let CREATOR_NAME_NUMBER_OF_LINES = 1
-    private static let CREATOR_NAME_FONT_SIZE: CGFloat = 14
-
-    static let WIDTH: CGFloat =
-        PLAYLIST_COVER_IMAGE_SIZE + PADDING * 2
-
-    static let PLAYLIST_NAME_HEIGHT: CGFloat =
-        UIFont.systemFont(ofSize: PLAYLIST_NAME_FONT_SIZE).lineHeight * CGFloat(PLAYLIST_NAME_NUMBER_OF_LINES)
-
-    static let CREATOR_NAME_HEIGHT: CGFloat =
-        UIFont.systemFont(ofSize: CREATOR_NAME_FONT_SIZE).lineHeight * CGFloat(CREATOR_NAME_NUMBER_OF_LINES)
-
-    static let ESTIMATED_HEIGHT: CGFloat =
-        PLAYLIST_COVER_IMAGE_SIZE +
-        PLAYLIST_NAME_HEIGHT + CREATOR_NAME_HEIGHT
-        + MAIN_STACK_GAP
-        + LABELS_STACK_GAP
-        + PADDING * 2
 
     private let playlistCoverImageView: UIImageView = {
         let imageView = UIImageView()
         imageView.contentMode = .scaleAspectFill
 
         imageView.translatesAutoresizingMaskIntoConstraints = false
-        NSLayoutConstraint.activate([
-            imageView.widthAnchor.constraint(equalToConstant: PLAYLIST_COVER_IMAGE_SIZE),
-            imageView.heightAnchor.constraint(equalToConstant: PLAYLIST_COVER_IMAGE_SIZE)
-        ])
+        imageView.clipsToBounds = true
 
         return imageView
     }()
 
     private let playlistNameLabel: UILabel = {
         let label = UILabel()
-        label.numberOfLines = PLAYLIST_NAME_NUMBER_OF_LINES
-        label.font = .systemFont(ofSize: PLAYLIST_NAME_FONT_SIZE, weight: .semibold)
+        label.numberOfLines = 0
+        label.font = .systemFont(ofSize: 18, weight: .semibold)
+        label.textAlignment = .center
 
         return label
     }()
 
     private let creatorNameLabel: UILabel = {
         let label = UILabel()
-        label.numberOfLines = CREATOR_NAME_NUMBER_OF_LINES
-        label.font = .systemFont(ofSize: CREATOR_NAME_FONT_SIZE, weight: .regular)
+        label.numberOfLines = 0
+        label.font = .systemFont(ofSize: 14, weight: .regular)
+        label.textAlignment = .center
 
         return label
     }()
@@ -60,8 +35,10 @@ class FeaturedPlaylistCollectionViewCell: UICollectionViewCell {
     private let mainStack: UIStackView = {
         let stack = UIStackView()
         stack.axis = .vertical
-        stack.spacing = MAIN_STACK_GAP
-        stack.alignment = .fill
+        stack.alignment = .center
+        stack.spacing = 8
+        stack.isLayoutMarginsRelativeArrangement = true
+        stack.layoutMargins = UIEdgeInsets(top: 8, left: 4, bottom: 8, right: 4)
 
         return stack
     }()
@@ -69,8 +46,6 @@ class FeaturedPlaylistCollectionViewCell: UICollectionViewCell {
     private let labelsStack: UIStackView = {
         let stack = UIStackView()
         stack.axis = .vertical
-        stack.spacing = LABELS_STACK_GAP
-        stack.distribution = .equalSpacing
 
         return stack
     }()
@@ -84,7 +59,6 @@ class FeaturedPlaylistCollectionViewCell: UICollectionViewCell {
         mainStack.addArrangedSubview(playlistCoverImageView)
         mainStack.addArrangedSubview(labelsStack)
 
-        contentView.backgroundColor = .secondarySystemBackground
         contentView.addSubview(mainStack)
 
         setUpConstraints()
@@ -98,12 +72,17 @@ class FeaturedPlaylistCollectionViewCell: UICollectionViewCell {
     func setUpConstraints() {
         mainStack.translatesAutoresizingMaskIntoConstraints = false
 
-        NSLayoutConstraint.activate([
-            mainStack.leftAnchor.constraint(equalTo: contentView.leftAnchor, constant: FeaturedPlaylistCollectionViewCell.PADDING),
-            mainStack.topAnchor.constraint(equalTo: contentView.topAnchor, constant: FeaturedPlaylistCollectionViewCell.PADDING),
-            mainStack.rightAnchor.constraint(equalTo: contentView.rightAnchor, constant: -FeaturedPlaylistCollectionViewCell.PADDING),
-            mainStack.bottomAnchor.constraint(equalTo: contentView.bottomAnchor, constant: -FeaturedPlaylistCollectionViewCell.PADDING)
-        ])
+        NSLayoutConstraint.activate(
+            [
+                playlistCoverImageView.widthAnchor.constraint(equalTo: contentView.widthAnchor, multiplier: 0.8),
+                playlistCoverImageView.heightAnchor.constraint(equalTo: playlistCoverImageView.widthAnchor),
+
+                mainStack.leftAnchor.constraint(equalTo: contentView.leftAnchor),
+                mainStack.topAnchor.constraint(equalTo: contentView.topAnchor),
+                mainStack.rightAnchor.constraint(equalTo: contentView.rightAnchor),
+                mainStack.bottomAnchor.constraint(equalTo: contentView.bottomAnchor)
+            ]
+        )
     }
 
     override func prepareForReuse() {
