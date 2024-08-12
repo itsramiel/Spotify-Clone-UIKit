@@ -6,6 +6,7 @@
 //
 
 import UIKit
+import SafariServices
 
 struct SearchSection {
     let title: String
@@ -39,6 +40,7 @@ class SearchResultsViewController: UIViewController {
         tableView.frame = view.bounds
         tableView.delegate = self
         tableView.dataSource = self
+        tableView.register(SearchResultTableViewCell.self, forCellReuseIdentifier: SearchResultTableViewCell.identifier)
     }
     
     func update(with data: [SearchSection]) {
@@ -62,24 +64,34 @@ extension SearchResultsViewController: UITableViewDelegate, UITableViewDataSourc
     }
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        let cell = tableView.dequeueReusableCell(withIdentifier: "cell")
+        guard let cell = tableView.dequeueReusableCell(withIdentifier: SearchResultTableViewCell.identifier) as? SearchResultTableViewCell else {
+            fatalError()
+        }
         
         let searchResult = data[indexPath.section].data[indexPath.row]
         
-        cell?.textLabel?.text = {
+        let viewModel = {
             switch searchResult {
             case .artist(model: let model):
-                return model.name
+                let subtitle: String? = {
+                    if let followersCount = model.followers?.total {
+                        return "Followers: \(followersCount)"
+                    }
+                    
+                    return nil
+                }()
+                return SearchResultTableViewCellViewModel(artworkUrl: URL(string: model.images?.first?.url ?? ""), title: model.name, subtitle: subtitle)
             case .album(model: let model):
-                return model.name
+                return SearchResultTableViewCellViewModel(artworkUrl: URL(string: model.images.first?.url ?? ""), title: model.name, subtitle: model.artists.map({$0.name}).joined(separator: ", "))
             case .track(model: let model):
-                return model.name
+                return SearchResultTableViewCellViewModel(artworkUrl: URL(string: model.album.images.first?.url ?? ""), title: model.name, subtitle: model.artists.map({$0.name}).joined(separator: ", "))
             case .playlist(model: let model):
-                return model.name
+                return SearchResultTableViewCellViewModel(artworkUrl: URL(string: model.images.first?.url ?? ""), title: model.name, subtitle: model.owner.displayName)
             }
         }()
         
-        return cell ?? UITableViewCell()
+        cell.configureWith(viewModel: viewModel)
+        return cell
     }
     
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
@@ -89,5 +101,4 @@ extension SearchResultsViewController: UITableViewDelegate, UITableViewDataSourc
         
         delegate?.didTapSearchResult(item)
     }
-    
 }

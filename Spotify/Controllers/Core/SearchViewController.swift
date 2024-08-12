@@ -6,6 +6,7 @@
 //
 
 import UIKit
+import SafariServices
 
 class SearchViewController: UIViewController {
     var searchDebounceTimer: Timer?
@@ -160,10 +161,14 @@ extension SearchViewController:UISearchBarDelegate, UISearchResultsUpdating {
 
 extension SearchViewController: SearchResultsViewControllerDelegate {
     func didTapSearchResult(_ searchResult: SearchResult) {
-        let vc: UIViewController  = {
+        let vc: UIViewController?  = {
             switch searchResult {
-            case .artist(model: _):
-                return UIViewController()
+            case .artist(model: let model):
+                if let url = URL(string: model.externalUrls["spotify"] ?? "") {
+                    let vc = SFSafariViewController(url: url)
+                    present(vc, animated: true)
+                }
+                return nil
             case .album(model: let model):
                 return AlbumViewController(album: model)
             case .track(model: _):
@@ -173,7 +178,9 @@ extension SearchViewController: SearchResultsViewControllerDelegate {
             }
         }()
         
-        vc.navigationItem.largeTitleDisplayMode = .never
-        navigationController?.pushViewController(vc, animated: true)
+        if let vc {
+            vc.navigationItem.largeTitleDisplayMode = .never
+            navigationController?.pushViewController(vc, animated: true)
+        }
     }
 }

@@ -42,6 +42,8 @@
 		9B21DCDD2C51611200E2C520 /* Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9B21DCDC2C51611200E2C520 /* Extensions.swift */; };
 		9B21DCDF2C5299DE00E2C520 /* AuthResponse.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9B21DCDE2C5299DE00E2C520 /* AuthResponse.swift */; };
 		9B21DCE12C52AC5700E2C520 /* HttpMethod.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9B21DCE02C52AC5700E2C520 /* HttpMethod.swift */; };
+		9B225A422C6A8973002620BA /* SearchResultTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9B225A412C6A8973002620BA /* SearchResultTableViewCell.swift */; };
+		9B225A442C6A8CC0002620BA /* SearchResultTableViewCellViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9B225A432C6A8CC0002620BA /* SearchResultTableViewCellViewModel.swift */; };
 		9BCF76932C580C340007ACC4 /* NewReleasesResponse.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9BCF76922C580C340007ACC4 /* NewReleasesResponse.swift */; };
 		9BCF76952C590A420007ACC4 /* Image.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9BCF76942C590A420007ACC4 /* Image.swift */; };
 		9BCF76B72C63D88F0007ACC4 /* CoverHeaderCollectionReusableView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9BCF76B62C63D88F0007ACC4 /* CoverHeaderCollectionReusableView.swift */; };
@@ -98,6 +100,8 @@
 		9B21DCDC2C51611200E2C520 /* Extensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Extensions.swift; sourceTree = "<group>"; };
 		9B21DCDE2C5299DE00E2C520 /* AuthResponse.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AuthResponse.swift; sourceTree = "<group>"; };
 		9B21DCE02C52AC5700E2C520 /* HttpMethod.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HttpMethod.swift; sourceTree = "<group>"; };
+		9B225A412C6A8973002620BA /* SearchResultTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SearchResultTableViewCell.swift; sourceTree = "<group>"; };
+		9B225A432C6A8CC0002620BA /* SearchResultTableViewCellViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SearchResultTableViewCellViewModel.swift; sourceTree = "<group>"; };
 		9BCF76922C580C340007ACC4 /* NewReleasesResponse.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NewReleasesResponse.swift; sourceTree = "<group>"; };
 		9BCF76942C590A420007ACC4 /* Image.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Image.swift; sourceTree = "<group>"; };
 		9BCF76B62C63D88F0007ACC4 /* CoverHeaderCollectionReusableView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CoverHeaderCollectionReusableView.swift; sourceTree = "<group>"; };
@@ -209,6 +213,7 @@
 				DDE7A17B325B08FE491DC090 /* Browse */,
 				9BCF76B62C63D88F0007ACC4 /* CoverHeaderCollectionReusableView.swift */,
 				9BCF76C82C66812D0007ACC4 /* CategoryCollectionViewCell.swift */,
+				9B225A412C6A8973002620BA /* SearchResultTableViewCell.swift */,
 			);
 			path = View;
 			sourceTree = "<group>";
@@ -246,6 +251,7 @@
 				9BCF76B82C63DC800007ACC4 /* CoverHeaderViewModel.swift */,
 				9BCF76C12C6535A40007ACC4 /* AlbumTrackCellViewModel.swift */,
 				9BCF76CC2C6698600007ACC4 /* CategoryCollectionViewCellViewModel.swift */,
+				9B225A432C6A8CC0002620BA /* SearchResultTableViewCellViewModel.swift */,
 			);
 			path = ViewModels;
 			sourceTree = "<group>";
@@ -476,10 +482,12 @@
 				0CE5A0BD3AEEF1551DAF72EF /* NewReleaseCollectionViewCell.swift in Sources */,
 				3A8F1E1A853BADBFC779FBAE /* NewReleasesCellViewModel.swift in Sources */,
 				77427312894888C13BB52C30 /* FeaturedPlaylistCollectionViewCell.swift in Sources */,
+				9B225A422C6A8973002620BA /* SearchResultTableViewCell.swift in Sources */,
 				9BCF76B92C63DC800007ACC4 /* CoverHeaderViewModel.swift in Sources */,
 				1A5CF086B281BBAFEF2CC320 /* PlaylistTrackCollectionViewCell.swift in Sources */,
 				9FE583369F4AAF5542E23543 /* FeaturedPlaylistsResponse.swift in Sources */,
 				4DF6D48B78279A9076266180 /* GetRrecommendationsResponse.swift in Sources */,
+				9B225A442C6A8CC0002620BA /* SearchResultTableViewCellViewModel.swift in Sources */,
 				9069EFB6F431164979D05E19 /* Album.swift in Sources */,
 				9BCF76C92C66812D0007ACC4 /* CategoryCollectionViewCell.swift in Sources */,
 				9BCF76C22C6535A40007ACC4 /* AlbumTrackCellViewModel.swift in Sources */,
