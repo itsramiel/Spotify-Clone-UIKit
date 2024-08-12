@@ -24,7 +24,7 @@ struct Playlist: Codable {
     let name: String
     let owner: PlaylistOwner
     let primaryColor: String?
-    let isPublic: Bool
+    let isPublic: Bool?
     let snapshotId: String
     let tracks: PlaylistTrack
     let type: String

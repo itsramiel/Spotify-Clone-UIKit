@@ -8,6 +8,7 @@
 import UIKit
 
 class SearchViewController: UIViewController {
+    var searchDebounceTimer: Timer?
     
     let searchController: UISearchController = {
         let vc = UISearchController(searchResultsController: SearchResultsViewController())
@@ -17,6 +18,14 @@ class SearchViewController: UIViewController {
         
         return vc
     }()
+    
+    var searchResultsViewController: SearchResultsViewController? {
+        guard let controller = searchController.searchResultsController as? SearchResultsViewController else {
+            return nil
+        }
+        
+        return controller
+    }
     
     private var categories = [Category]()
     
@@ -51,11 +60,13 @@ class SearchViewController: UIViewController {
             }
         )
     )
-
+    
     override func viewDidLoad() {
         super.viewDidLoad()
-
+        
+        searchResultsViewController?.delegate = self
         searchController.searchResultsUpdater = self
+        searchController.searchBar.delegate = self
         view.backgroundColor = .systemBackground
         navigationItem.searchController = searchController
         setupCollectionView()
@@ -107,17 +118,62 @@ extension SearchViewController: UICollectionViewDelegate, UICollectionViewDataSo
     
 }
 
-extension SearchViewController: UISearchResultsUpdating {
+
+extension SearchViewController:UISearchBarDelegate, UISearchResultsUpdating {
+    
     func updateSearchResults(for searchController: UISearchController) {
-        guard let searchResultsController = searchController.searchResultsController as? SearchResultsViewController,
-              let query = searchController.searchBar.text?.trimmingCharacters(in: .whitespaces),
+        guard let query = searchController.searchBar.text?.trimmingCharacters(in: .whitespaces),
               query.count > 0 else {
             return
         }
         
-        print(query)
+        searchDebounceTimer?.invalidate()
+        
+        searchDebounceTimer = Timer.scheduledTimer(
+            timeInterval: 1,
+            target: self,
+            selector: #selector(performSearch),
+            userInfo: query,
+            repeats: false
+        )
     }
     
-    
+    @objc private func performSearch() {
+        guard let query = searchDebounceTimer?.userInfo as? String else { return }
+        APIManager.shared.search(
+            with: query) { [weak self] result in
+                guard case let .success(response) = result else {
+                    return
+                }
+                
+                DispatchQueue.main.async {
+                    self?.searchResultsViewController?.update(with: [
+                        SearchSection(title: "Songs", data: response.tracks.items.map({ .track(model: $0 )})),
+                        SearchSection(title: "Artists", data: response.artists.items.map({ .artist(model: $0 )})),
+                        SearchSection(title: "Albums", data: response.albums.items.map({ .album(model: $0 )})),
+                        SearchSection(title: "Playlists", data: response.playlists.items.map({ .playlist(model: $0 )}))
+                    ])
+                }
+            }
+    }
 }
 
+extension SearchViewController: SearchResultsViewControllerDelegate {
+    func didTapSearchResult(_ searchResult: SearchResult) {
+        let vc: UIViewController  = {
+            switch searchResult {
+            case .artist(model: _):
+                return UIViewController()
+            case .album(model: let model):
+                return AlbumViewController(album: model)
+            case .track(model: _):
+                return UIViewController()
+            case .playlist(model: let model):
+                return PlaylistViewController(playlist: model)
+            }
+        }()
+        
+        vc.navigationItem.largeTitleDisplayMode = .never
+        navigationController?.pushViewController(vc, animated: true)
+    }
+}

@@ -32,17 +32,6 @@ struct PlaylistDetail: Codable {
         case user
     }
 
-    // MARK: - Tracks
-
-    struct Tracks: Codable {
-        let href: String
-        let items: [Item]
-        let limit: Int
-        let next: String?
-        let offset: Int
-        let previous: String?
-        let total: Int
-    }
 
     // MARK: - Item
 
@@ -112,6 +101,6 @@ struct PlaylistDetail: Codable {
     let owner: Owner
     let primaryColor: String?
     let snapshotId: String
-    let tracks: Tracks
+    let tracks: PaginatedResponse<Item>
     let type, uri: String
 }

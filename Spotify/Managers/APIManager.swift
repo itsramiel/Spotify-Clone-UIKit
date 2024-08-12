@@ -19,6 +19,7 @@ final class APIManager {
     enum APIError: Error {
         case UnAuthenticated
         case FailedToGetData
+        case invalidQuery
     }
 
     public func getCurrentUserProfile(completion: @escaping (Result<UserProfile, Error>) -> Void) {
@@ -45,18 +46,48 @@ final class APIManager {
         })
     }
     
-    struct GetCategoriesResponse: Codable {
-        struct Categories: Codable {
-            let href: String
-            let items: [Category]
-            let limit: Int
-            let next: String?
-            let offset: Int
-            let previous: String?
-            let total: Int
+    struct SearchResponse: Codable {
+        let albums: PaginatedResponse<Album>
+        let artists: PaginatedResponse<Artist>
+        let tracks: PaginatedResponse<Track>
+        let playlists: PaginatedResponse<Playlist>
+    }
+    
+    public func search(with query: String, completion: @escaping (Result<SearchResponse, Error>) -> Void) {
+        let components = URLComponents(string: Constants.baseUrl + "/search")
+        guard var components else { fatalError() }
+        
+        components.queryItems = [
+            URLQueryItem(name: "q", value: query.addingPercentEncoding(withAllowedCharacters: .urlQueryAllowed)),
+            URLQueryItem(name: "type", value: ["album", "artist", "playlist", "track"].joined(separator: ","))
+        ]
+        
+        guard let url = components.url else {
+            return completion(.failure(APIError.invalidQuery))
         }
         
-        let categories: Categories
+        httpRequest(url: url, method: .GET, completion: { result in
+            switch result {
+            case let .success(data):
+                do {
+                    let jsonDecoder = JSONDecoder()
+                    jsonDecoder.keyDecodingStrategy = .convertFromSnakeCase
+
+                    try completion(.success(jsonDecoder.decode(SearchResponse.self, from: data)))
+                } catch {
+                    print(error)
+                    completion(.failure(error))
+                }
+            case let .failure(error):
+                completion(.failure(error))
+            }
+
+        })
+    }
+
+    
+    struct GetCategoriesResponse: Codable {
+        let categories: PaginatedResponse<Category>
     }
     
     public func getCategories(completion: @escaping (Result<GetCategoriesResponse, Error>) -> Void) {
@@ -84,18 +115,8 @@ final class APIManager {
     }
     
     struct GetPlaylistsForCategoryResponse: Codable {
-        struct Playlists: Codable {
-            let href: String?
-            let limit: Int
-            let next: String?
-            let previous: String?
-            let offset: Int
-            let total: Int
-            let items: [Playlist]
-        }
-        
         let message: String
-        let playlists: Playlists
+        let playlists: PaginatedResponse<Playlist>
     }
     
     public func getPlaylistsForCategory(with id: String, completion: @escaping (Result<GetPlaylistsForCategoryResponse, Error>) -> Void) {

@@ -27,16 +27,6 @@ struct AlbumDetail: Codable {
         let isLocal: Bool
     }
     
-    struct Tracks: Codable {
-        let href: String
-        let limit: Int
-        let next: String?
-        let offset: Int
-        let previous: String?
-        let total: Int
-        let items: [Track]
-    }
-    
     let albumType: String
     let totalTracks: Int
     let availableMarkets: [String]
@@ -49,7 +39,7 @@ struct AlbumDetail: Codable {
     let releaseDatePrecision: String
     let type: String
     let uri: String
-    let tracks: Tracks
+    let tracks: PaginatedResponse<Track>
     let artists: [Artist]
     let restrictions: [String: String]?
     let genres: [String]
