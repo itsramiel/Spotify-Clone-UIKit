@@ -2,7 +2,7 @@ import UIKit
 
 class PlaylistViewController: UIViewController {
     private let playlist: Playlist
-    private var trackViewModels = [PlaylistTrackCellViewModel]()
+    private var tracks = [Track]()
 
     private let collectionView = UICollectionView(
         frame: .zero,
@@ -52,13 +52,7 @@ class PlaylistViewController: UIViewController {
 
         APIManager.shared.getPlaylistDetailWith(playlistId: playlist.id, completion: { result in
             guard case let .success(playlist) = result else { return }
-            self.trackViewModels = playlist.tracks.items.map {
-                PlaylistTrackCellViewModel(
-                    name: $0.track.name,
-                    artworkURL: URL(string: $0.track.album.images.first?.url ?? ""),
-                    artistName: $0.track.artists.first?.name ?? ""
-                )
-            }
+            self.tracks = playlist.tracks.items.map({$0.track})
 
             DispatchQueue.main.async {
                 self.setupCollectionView()
@@ -97,7 +91,7 @@ class PlaylistViewController: UIViewController {
 
 extension PlaylistViewController: CoverHeaderCollectionReusableViewDelegate {
     func playlistHeaderCollectionReusableViewDidTapPlayAll(_ header: CoverHeaderCollectionReusableView) {
-       print("Playing all")
+        PlaybackPresenter.startPlayback(from: self, tracks: tracks)
     }
 }
 
@@ -107,7 +101,7 @@ extension PlaylistViewController: UICollectionViewDataSource, UICollectionViewDe
     }
 
     func collectionView(_: UICollectionView, numberOfItemsInSection _: Int) -> Int {
-        return trackViewModels.count
+        return tracks.count
     }
     
     func collectionView(_ collectionView: UICollectionView, viewForSupplementaryElementOfKind kind: String, at indexPath: IndexPath) -> UICollectionReusableView {
@@ -134,9 +128,21 @@ extension PlaylistViewController: UICollectionViewDataSource, UICollectionViewDe
             fatalError("Invalid cell type")
         }
 
-        cell.configure(with: trackViewModels[indexPath.row])
+        let track = tracks[indexPath.row]
+        cell.configure(with:
+                        PlaylistTrackCellViewModel(
+                            name: track.name,
+                            artworkURL: URL(string: track.album?.images.first?.url ?? ""),
+                            artistName: track.artists.first?.name ?? ""
+                        )
+        )
 
         return cell
+    }
+    
+    func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
+        let track = tracks[indexPath.row]
+        PlaybackPresenter.startPlayback(from: self, tracks: [track])
     }
 }
 

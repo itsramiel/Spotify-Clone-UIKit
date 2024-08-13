@@ -84,7 +84,7 @@ extension SearchResultsViewController: UITableViewDelegate, UITableViewDataSourc
             case .album(model: let model):
                 return SearchResultTableViewCellViewModel(artworkUrl: URL(string: model.images.first?.url ?? ""), title: model.name, subtitle: model.artists.map({$0.name}).joined(separator: ", "))
             case .track(model: let model):
-                return SearchResultTableViewCellViewModel(artworkUrl: URL(string: model.album.images.first?.url ?? ""), title: model.name, subtitle: model.artists.map({$0.name}).joined(separator: ", "))
+                return SearchResultTableViewCellViewModel(artworkUrl: URL(string: model.album?.images.first?.url ?? ""), title: model.name, subtitle: model.artists.map({$0.name}).joined(separator: ", "))
             case .playlist(model: let model):
                 return SearchResultTableViewCellViewModel(artworkUrl: URL(string: model.images.first?.url ?? ""), title: model.name, subtitle: model.owner.displayName)
             }

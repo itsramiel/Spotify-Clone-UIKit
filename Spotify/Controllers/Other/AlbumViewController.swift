@@ -12,7 +12,7 @@ class AlbumViewController: UIViewController {
     }
     
     private let album: Album
-    private var viewModels = [AlbumTrackCellViewModel]()
+    private var tracks = [Track]()
     private let collectionView:UICollectionView = {
         let collectionView = UICollectionView(
             frame: .zero, collectionViewLayout: UICollectionViewCompositionalLayout(sectionProvider: {_, _ in
@@ -39,9 +39,7 @@ class AlbumViewController: UIViewController {
 
         APIManager.shared.getAlbumDetailWith(albumId: album.id, completion: { [weak self] result in
             guard case let .success(album) = result else { return }
-            self?.viewModels = album.tracks.items.map({
-                AlbumTrackCellViewModel(name: $0.name, artistName: $0.artists.map({$0.name}).joined(separator: ", "))
-            })
+            self?.tracks = album.tracks.items
             DispatchQueue.main.async { [weak self] in
                 self?.collectionView.reloadData()
             }
@@ -73,9 +71,15 @@ class AlbumViewController: UIViewController {
     }
 }
 
+extension AlbumViewController: CoverHeaderCollectionReusableViewDelegate {
+    func playlistHeaderCollectionReusableViewDidTapPlayAll(_ header: CoverHeaderCollectionReusableView) {
+        PlaybackPresenter.startPlayback(from: self, tracks: tracks)
+    }
+}
+
 extension AlbumViewController:UICollectionViewDelegate, UICollectionViewDataSource {
     func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
-        return viewModels.count
+        return tracks.count
     }
     
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
@@ -85,7 +89,8 @@ extension AlbumViewController:UICollectionViewDelegate, UICollectionViewDataSour
         ) as? AlbumTrackCollectionViewCell else {
             fatalError("Cannot dequeue a track collection view cell")
         }
-        cell.configure(with: viewModels[indexPath.row])
+        let track = tracks[indexPath.row]
+        cell.configure(with: AlbumTrackCellViewModel(name: track.name, artistName: track.artists.map({$0.name}).joined(separator: ", ")))
         
         return cell
     }
@@ -101,6 +106,8 @@ extension AlbumViewController:UICollectionViewDelegate, UICollectionViewDataSour
             fatalError()
         }
         
+        view.delegate = self
+        
         view.configure(with: CoverHeaderViewModel(
             title: album.name,
             subtitle1: album.artists.first?.name ?? "",
@@ -111,5 +118,8 @@ extension AlbumViewController:UICollectionViewDelegate, UICollectionViewDataSour
         return view
     }
     
+    func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
+        PlaybackPresenter.startPlayback(from: self, tracks: [tracks[indexPath.row]])
+    }
     
 }

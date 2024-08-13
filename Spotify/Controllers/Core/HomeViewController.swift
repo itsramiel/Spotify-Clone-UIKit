@@ -82,7 +82,8 @@ class HomeViewController: UIViewController {
         let group = DispatchGroup()
         group.enter()
         group.enter()
-        
+        group.enter()
+
         var newReleases: NewReleasesResponse?
         var featuredPlaylists: FeaturedPlaylistsResponse?
         var recommendations: GetRrecommendationsResponse?
@@ -102,20 +103,20 @@ class HomeViewController: UIViewController {
             guard case let .success(response) = result else { return }
             featuredPlaylists = response
         })
-        // Recommended Tracks
-//        APIManager.shared.getRecommendations(completion: { result in
-//            defer { group.leave() }
-//            
-//            guard case let .success(response) = result else { return }
-//            recommendations = response
-//        })
+//         Recommended Tracks
+        APIManager.shared.getRecommendations(completion: { result in
+            defer { group.leave() }
+            
+            guard case let .success(response) = result else { return }
+            recommendations = response
+        })
         
         group.notify(queue: .main) {
-            guard let newReleases, let featuredPlaylists/*, let recommendations*/ else { return }
+            guard let newReleases, let featuredPlaylists, let recommendations else { return }
             
             self.albums = newReleases.albums.items
             self.playlists = featuredPlaylists.playlists.items
-//            self.tracks = recommendations.tracks
+            self.tracks = recommendations.tracks
             self.configureModels(
             )
         }
@@ -136,7 +137,7 @@ class HomeViewController: UIViewController {
         
         sections.append(
             .recommendedTracks(viewModels: tracks.map { PlaylistTrackCellViewModel(
-                name: $0.name, artworkURL: URL(string: $0.album.images.first?.url ?? ""), artistName: $0.artists.first?.name ?? ""
+                name: $0.name, artworkURL: URL(string: $0.album?.images.first?.url ?? ""), artistName: $0.artists.first?.name ?? ""
             ) })
         )
         
@@ -312,6 +313,8 @@ extension HomeViewController: UICollectionViewDataSource, UICollectionViewDelega
             let vc = PlaylistViewController(playlist: playlist)
             navigationController?.pushViewController(vc, animated: true)
         case .recommendedTracks:
+            let track = tracks[indexPath.row]
+            PlaybackPresenter.startPlayback(from: self, tracks: [track])
             break
         }
     }

@@ -43,25 +43,6 @@ struct PlaylistDetail: Codable {
         let track: Track
     }
 
-    // MARK: - Track
-
-    struct Track: Codable {
-        let previewUrl: String?
-        let availableMarkets: [String]
-        let explicit: Bool
-        let type: TrackType
-        let episode, track: Bool
-        let album: Album
-        let artists: [Owner]
-        let discNumber, trackNumber, durationMs: Int
-        let externalIds: ExternalIDS
-        let externalUrls: [String: String]
-        let href: String
-        let id, name: String
-        let popularity: Int
-        let uri: String
-        let isLocal: Bool
-    }
 
     // MARK: - Album
 

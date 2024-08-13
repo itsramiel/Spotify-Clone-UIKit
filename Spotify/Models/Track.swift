@@ -24,21 +24,16 @@ struct Track: Codable {
         let uri: String
     }
 
-    let album: Album
-    let artists: [Artist]
+    let previewUrl: String?
     let availableMarkets: [String]
-    let discNumber: Int
-    let durationMs: Int
     let explicit: Bool
-    let externalIds: [String: String]
+    let type: String
+    let album: Album?
+    let artists: [Artist]
+    let discNumber, durationMs, trackNumber: Int
     let externalUrls: [String: String]
     let href: String
-    let id: String
-    let isLocal: Bool
-    let name: String
-    let popularity: Int
-    let previewUrl: String?
-    let trackNumber: Int
-    let type: String
+    let id, name: String
     let uri: String
+    let isLocal: Bool
 }

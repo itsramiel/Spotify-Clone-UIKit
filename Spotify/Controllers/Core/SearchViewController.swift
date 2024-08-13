@@ -161,24 +161,20 @@ extension SearchViewController:UISearchBarDelegate, UISearchResultsUpdating {
 
 extension SearchViewController: SearchResultsViewControllerDelegate {
     func didTapSearchResult(_ searchResult: SearchResult) {
-        let vc: UIViewController?  = {
-            switch searchResult {
-            case .artist(model: let model):
-                if let url = URL(string: model.externalUrls["spotify"] ?? "") {
-                    let vc = SFSafariViewController(url: url)
-                    present(vc, animated: true)
-                }
-                return nil
-            case .album(model: let model):
-                return AlbumViewController(album: model)
-            case .track(model: _):
-                return UIViewController()
-            case .playlist(model: let model):
-                return PlaylistViewController(playlist: model)
+        switch searchResult {
+        case .artist(model: let model):
+            if let url = URL(string: model.externalUrls["spotify"] ?? "") {
+                let vc = SFSafariViewController(url: url)
+                present(vc, animated: true)
             }
-        }()
-        
-        if let vc {
+        case .album(model: let model):
+            let vc = AlbumViewController(album: model)
+            vc.navigationItem.largeTitleDisplayMode = .never
+            navigationController?.pushViewController(vc, animated: true)
+        case .track(model: let track):
+            PlaybackPresenter.startPlayback(from: self, tracks: [track])
+        case .playlist(model: let model):
+            let vc = PlaylistViewController(playlist: model)
             vc.navigationItem.largeTitleDisplayMode = .never
             navigationController?.pushViewController(vc, animated: true)
         }
