@@ -12,7 +12,9 @@ final class PlaybackPresenter {
         from viewController: UIViewController,
         tracks: [Track]
     ){
-        let vc = PlayerViewController()
-        viewController.present(vc, animated: true)
+        guard let firstTrack = tracks.first else { return }
+        let vc = PlayerViewController(headerTitle: firstTrack.name)
+        let nc = UINavigationController(rootViewController: vc)
+        viewController.present(nc, animated: true)
     }
 }
