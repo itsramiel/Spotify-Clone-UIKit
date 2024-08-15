@@ -6,16 +6,18 @@
 //
 
 import UIKit
+import SDWebImage
+
+protocol PlayerViewControllerDelegate: AnyObject {
+    func didTapPlayPause()
+    func didTapBackward()
+    func didTapForward()
+    func didSliderChange(_ value: Float)
+}
 
 class PlayerViewController: UIViewController {
-    init(headerTitle: String) {
-        super.init(nibName: nil, bundle: nil)
-        title = headerTitle
-    }
-    
-    required init?(coder: NSCoder) {
-        fatalError("init(coder:) has not been implemented")
-    }
+    weak var datasource: PlayerDataSource?
+    weak var delegate: PlayerViewControllerDelegate?
     
     private let imageView: UIImageView = {
         let imageView = UIImageView()
@@ -44,12 +46,22 @@ class PlayerViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         view.backgroundColor = .systemBackground
+        title = datasource?.title
         
         controlsView.delegate = self
+        controlsView.datasource = self
         
         view.addSubview(mainStack)
+        configureWithDatasource()
         configureBarButtons()
         setupConstraints()
+    }
+    
+    private func configureWithDatasource() {
+        imageView.sd_setImage(with: datasource?.imageUrl)
+        if let title = datasource?.title, let subtitle = datasource?.subtitle, let volume = datasource?.volume {
+            controlsView.configure(with: PlayerControlsViewViewModel(title: title, subtitle: subtitle, volume: volume))
+        }
     }
     
     private func setupConstraints() {
@@ -93,14 +105,30 @@ class PlayerViewController: UIViewController {
 
 extension PlayerViewController: PlayerControlsViewDelegate {
     func playerControlViewDidTapPlayPauseButton(_ playerControlsView: PlayerControlsView) {
-        // Todo
+        delegate?.didTapPlayPause()
     }
     
     func playerControlViewDidTapBackwardButton(_ playerControlsView: PlayerControlsView) {
-        // Todo
+        delegate?.didTapBackward()
+        configureWithDatasource()
     }
     
     func playerControlViewDidTapForwardButton(_ playerControlsView: PlayerControlsView) {
-        // Todo
+        delegate?.didTapForward()
+        configureWithDatasource()
+    }
+    
+    func playerControlsView(_ playerControlsView: PlayerControlsView, didSlideSlider value: Float) {
+        delegate?.didSliderChange(value)
+    }
+}
+
+extension PlayerViewController: PlayerControlsViewDataSource {
+    var isPlaying: Bool? {
+        return datasource?.isPlaying
+    }
+    
+    var volume: Float? {
+        datasource?.volume
     }
 }

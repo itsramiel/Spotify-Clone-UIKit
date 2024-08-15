@@ -38,8 +38,15 @@ class AlbumViewController: UIViewController {
         view.backgroundColor = .systemBackground
 
         APIManager.shared.getAlbumDetailWith(albumId: album.id, completion: { [weak self] result in
-            guard case let .success(album) = result else { return }
-            self?.tracks = album.tracks.items
+            guard case let .success(albumDetail) = result, let album = self?.album else { return }
+            var tracks = albumDetail.tracks.items
+            let tracksWithAlbum = tracks.map({
+                var track = $0
+                track.album = album
+                
+                return track
+            })
+            self?.tracks = tracksWithAlbum
             DispatchQueue.main.async { [weak self] in
                 self?.collectionView.reloadData()
             }
@@ -73,7 +80,7 @@ class AlbumViewController: UIViewController {
 
 extension AlbumViewController: CoverHeaderCollectionReusableViewDelegate {
     func playlistHeaderCollectionReusableViewDidTapPlayAll(_ header: CoverHeaderCollectionReusableView) {
-        PlaybackPresenter.startPlayback(from: self, tracks: tracks)
+        PlaybackPresenter.shared.startPlayback(from: self, tracks: tracks)
     }
 }
 
@@ -119,7 +126,7 @@ extension AlbumViewController:UICollectionViewDelegate, UICollectionViewDataSour
     }
     
     func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
-        PlaybackPresenter.startPlayback(from: self, tracks: [tracks[indexPath.row]])
+        PlaybackPresenter.shared.startPlayback(from: self, tracks: [tracks[indexPath.row]])
     }
     
 }

@@ -11,10 +11,17 @@ protocol PlayerControlsViewDelegate: AnyObject {
     func playerControlViewDidTapPlayPauseButton(_ playerControlsView: PlayerControlsView)
     func playerControlViewDidTapBackwardButton(_ playerControlsView: PlayerControlsView)
     func playerControlViewDidTapForwardButton(_ playerControlsView: PlayerControlsView)
+    func playerControlsView(_ playerControlsView: PlayerControlsView, didSlideSlider value: Float)
+}
+
+protocol PlayerControlsViewDataSource: AnyObject {
+    var isPlaying: Bool? { get }
+    var volume: Float? { get }
 }
 
 class PlayerControlsView: UIView {
     weak var delegate: PlayerControlsViewDelegate?
+    weak var datasource: PlayerControlsViewDataSource?
     
     private let volumeSlider: UISlider = {
         let slider = UISlider()
@@ -141,9 +148,12 @@ class PlayerControlsView: UIView {
     init() {
         super.init(frame: .zero)
         
+        updatePlayPauseButton(withValue: datasource?.isPlaying ?? true)
         playPauseButton.addTarget(self, action: #selector(didTapPlayPauseButton), for: .touchUpInside)
         backwardButton.addTarget(self, action: #selector(didTapBackwardButton), for: .touchUpInside)
         forwardButton.addTarget(self, action: #selector(didTapForwardButton), for: .touchUpInside)
+        
+        volumeSlider.addTarget(self, action: #selector(didSliderChange), for: .valueChanged)
 
         addSubview(container)
         container.addArrangedSubview(mainStack)
@@ -165,8 +175,31 @@ class PlayerControlsView: UIView {
         fatalError("init(coder:) has not been implemented")
     }
     
+    @objc private func didSliderChange() {
+        delegate?.playerControlsView(self, didSlideSlider: volumeSlider.value)
+    }
+    
+    private func updatePlayPauseButton(withValue isPlaying: Bool){
+        playPauseButton.setImage(
+            UIImage(
+                systemName: isPlaying ? "pause.fill": "play.fill",
+                withConfiguration: UIImage.SymbolConfiguration(
+                    pointSize: PlayerControlsView.BUTTON_SIZE
+                )
+            ),
+            for: .normal
+        )
+    }
+    
+    func configure(with viewModel: PlayerControlsViewViewModel){
+        nameLabel.text = viewModel.title
+        subtitleLabel.text = viewModel.subtitle
+        volumeSlider.value = viewModel.volume
+    }
+    
     @objc private func didTapPlayPauseButton() {
-        delegate?.playerControlViewDidTapForwardButton(self)
+        delegate?.playerControlViewDidTapPlayPauseButton(self)
+        updatePlayPauseButton(withValue: datasource?.isPlaying ?? true)
     }
     
     @objc private func didTapBackwardButton() {

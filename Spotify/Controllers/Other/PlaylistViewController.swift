@@ -91,7 +91,7 @@ class PlaylistViewController: UIViewController {
 
 extension PlaylistViewController: CoverHeaderCollectionReusableViewDelegate {
     func playlistHeaderCollectionReusableViewDidTapPlayAll(_ header: CoverHeaderCollectionReusableView) {
-        PlaybackPresenter.startPlayback(from: self, tracks: tracks)
+        PlaybackPresenter.shared.startPlayback(from: self, tracks: tracks)
     }
 }
 
@@ -142,7 +142,7 @@ extension PlaylistViewController: UICollectionViewDataSource, UICollectionViewDe
     
     func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
         let track = tracks[indexPath.row]
-        PlaybackPresenter.startPlayback(from: self, tracks: [track])
+        PlaybackPresenter.shared.startPlayback(from: self, tracks: [track])
     }
 }
 
