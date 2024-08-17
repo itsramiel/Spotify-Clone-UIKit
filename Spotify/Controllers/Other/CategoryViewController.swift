@@ -100,7 +100,7 @@ extension CategoryViewController: UICollectionViewDelegate, UICollectionViewData
             with: FeaturedPlaylistCellViewModel(
                 name: playlist.name,
                 artworkURL: URL(string: playlist.images?.first?.url ?? ""),
-                creatorName: playlist.owner?.displayName ?? ""
+                creatorName: playlist.owner.displayName ?? playlist.owner.id
             )
         )
         return cell

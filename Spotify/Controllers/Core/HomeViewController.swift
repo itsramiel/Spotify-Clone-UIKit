@@ -131,7 +131,7 @@ class HomeViewController: UIViewController {
         
         sections.append(
             .featuredPlaylists(viewModels: playlists.map { FeaturedPlaylistCellViewModel(
-                name: $0.name, artworkURL: URL(string: $0.images?.first?.url ?? ""), creatorName: $0.owner?.displayName ?? ""
+                name: $0.name, artworkURL: URL(string: $0.images?.first?.url ?? ""), creatorName: $0.owner.displayName ?? $0.owner.id
             ) })
         )
         

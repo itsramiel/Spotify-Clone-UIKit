@@ -9,6 +9,16 @@ import UIKit
 
 class LibraryPlaylistsViewController: UIViewController {
     
+    var tableView: UITableView = {
+        let view = UITableView()
+        view.register(
+            SearchResultTableViewCell.self,
+            forCellReuseIdentifier: SearchResultTableViewCell.identifier
+        )
+        
+        return view
+    }()
+    
     var playlists = [Playlist]()
     var actionLabelView = {
         let view = ActionLabelView()
@@ -29,13 +39,20 @@ class LibraryPlaylistsViewController: UIViewController {
         view.backgroundColor = .systemPink
         actionLabelView.delegate = self
         fetchPlaylists()
+        configureTableView()
+    }
+    
+    private func configureTableView() {
+        view.addSubview(tableView)
+        tableView.delegate = self
+        tableView.dataSource = self
     }
     
     private func fetchPlaylists() {
         APIManager.shared.getCurrentUserPlaylists {[weak self] result in
             guard case let .success(playlists) = result else { return }
             
-//            self?.playlists = playlists
+            self?.playlists = playlists
             DispatchQueue.main.async { [weak self] in
                 self?.updateUI()
             }
@@ -87,4 +104,30 @@ extension LibraryPlaylistsViewController: ActionLabelViewDelegate {
     func actionLabelViewDidTapButton(_ actionView: ActionLabelView) {
         self.showCreatePlaylistAlert()
     }
+}
+
+extension LibraryPlaylistsViewController: UITableViewDelegate, UITableViewDataSource {
+    func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
+        return playlists.count
+    }
+    
+    func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
+        guard let cell = tableView.dequeueReusableCell(
+            withIdentifier: SearchResultTableViewCell.identifier,
+            for: indexPath
+        ) as? SearchResultTableViewCell else {
+            return UITableViewCell()
+        }
+        
+        let playlist = playlists[indexPath.row]
+        cell.configureWith(viewModel: SearchResultTableViewCellViewModel(
+            artworkUrl: URL(string: playlist.images?.first?.url ?? ""),
+            title: playlist.name,
+            subtitle: playlist.owner.displayName ?? playlist.owner.id
+        )
+        )
+        
+        return cell
+    }
+    
 }

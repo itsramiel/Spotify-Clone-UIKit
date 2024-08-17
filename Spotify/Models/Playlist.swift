@@ -20,7 +20,7 @@ struct Playlist: Codable {
     let id: String
     let images: [Image]?
     let name: String
-    let owner: PlaylistOwner?
+    let owner: PlaylistOwner
     let primaryColor: String?
     let isPublic: Bool?
     let snapshotId: String
