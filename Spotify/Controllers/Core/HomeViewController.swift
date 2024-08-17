@@ -72,6 +72,64 @@ class HomeViewController: UIViewController {
         collectionView.dataSource = self
         collectionView.delegate = self
         collectionView.backgroundColor = .systemBackground
+        addLongTapGesture()
+    }
+    
+    private func addLongTapGesture() {
+        let gesture = UILongPressGestureRecognizer(target: self, action: #selector(didLongPress))
+        collectionView.addGestureRecognizer(gesture)
+    }
+    
+    @objc private func didLongPress(_ gesture: UILongPressGestureRecognizer) {
+        guard gesture.state == .began else {
+            return
+        }
+        
+        let point = gesture.location(in: collectionView)
+        
+        guard let indexPath = collectionView.indexPathForItem(at: point),
+              case let .recommendedTracks(viewModels: trackViewModels) = sections[indexPath.section]
+        else {
+            return
+        }
+        
+        let trackViewModel = trackViewModels[indexPath.row]
+        guard let track = tracks.first(where: {$0.name == trackViewModel.name}) else {
+            return
+        }
+
+        let actionSheet = UIAlertController(
+            title: track.name,
+            message: "Would you like to add this to a playlist?",
+            preferredStyle: .actionSheet
+        )
+        
+        actionSheet.addAction(UIAlertAction(title: "Cancel", style: .cancel))
+        actionSheet.addAction(
+            UIAlertAction(
+                title: "Add to Playlist",
+                style: .default,
+                handler: {[weak self] _ in
+                    
+                    DispatchQueue.main.async {
+                        var vc: LibraryPlaylistsViewController?
+                        vc = LibraryPlaylistsViewController { playlist in
+                            APIManager.shared.addTrackWith(
+                                uri: track.uri, toPlaylistWith: playlist.id, completion: { result in
+                                    DispatchQueue.main.async {
+                                        vc?.dismiss(animated: true)
+                                    }
+                                })
+                        }
+                        if let vc {
+                            self?.present(vc, animated: true)
+                        }
+                    }
+                }
+            )
+        )
+        
+        present(actionSheet, animated: true)
     }
     
     private var albums = [Album]()

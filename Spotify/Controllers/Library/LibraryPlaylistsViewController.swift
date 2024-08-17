@@ -35,12 +35,21 @@ class LibraryPlaylistsViewController: UIViewController {
         
         return view
     }()
-
+    
+    private let onPlaylistPress: ((Playlist) -> Void)?
+    
+    init(onPlaylistPress: ((Playlist) -> Void)? = nil) {
+        self.onPlaylistPress = onPlaylistPress
+        super.init(nibName: nil, bundle: nil)
+    }
+    
+    required init?(coder: NSCoder) {
+        fatalError("init(coder:) has not been implemented")
+    }
+    
     override func viewDidLoad() {
         super.viewDidLoad()
 
-        view.backgroundColor = .systemPink
-        
         view.addSubview(actionLabelView)
         view.addSubview(tableView)
         
@@ -145,8 +154,13 @@ extension LibraryPlaylistsViewController: UITableViewDelegate, UITableViewDataSo
     
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         tableView.deselectRow(at: indexPath, animated: true)
+        let playlist = playlists[indexPath.row]
         
-        let vc = PlaylistViewController(playlist: playlists[indexPath.row])
-        navigationController?.pushViewController(vc, animated: true)
+        if let onPlaylistPress {
+            onPlaylistPress(playlist)
+        } else {
+            let vc = PlaylistViewController(playlist: playlist)
+            navigationController?.pushViewController(vc, animated: true)
+        }
     }
 }

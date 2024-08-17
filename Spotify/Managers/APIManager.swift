@@ -250,12 +250,42 @@ final class APIManager {
 
     }
     
+    struct AddTrackResponse: Codable {
+        let snapshotId: String
+    }
+    
     public func addTrackWith(
-        id trackId: String,
+        uri trackUri: String,
         toPlaylistWith playlistId: String,
         completion: @escaping (Bool) -> Void
     ){
+        guard let url = URL(string: "\(Constants.baseUrl)/playlists/\(playlistId)/tracks") else {
+            fatalError("Invalid URL")
+        }
         
+        let body: [String: Codable] = [
+            "position": 0,
+            "uris": [trackUri]
+        ]
+        
+        self.httpRequest(httpParams: HttpRequestParams(url: url, method: .POST, body: body), completion: { result in
+            switch result {
+            case let .success(data):
+                do {
+                    let jsonDecoder = JSONDecoder()
+                    jsonDecoder.keyDecodingStrategy = .convertFromSnakeCase
+                    
+                    let _ = try jsonDecoder.decode(AddTrackResponse.self, from: data)
+                    completion(true)
+                } catch {
+                    print(error)
+                    completion(false)
+                }
+            case .failure(_):
+                completion(false)
+            }
+            
+        })
     }
     
     public func removeTrackWith(
@@ -407,6 +437,7 @@ final class APIManager {
         if let body = httpParams.body {
             do {
                 request.httpBody = try JSONSerialization.data(withJSONObject: body)
+                request.setValue("application/json", forHTTPHeaderField: "Content-Type")
             } catch {
                 completion(.failure(APIError.invalidBody))
             }
