@@ -26,7 +26,7 @@ struct CollectionSectionBuilder {
     static func getCoverHeaderSupplementaryItem() -> NSCollectionLayoutBoundarySupplementaryItem {
         return NSCollectionLayoutBoundarySupplementaryItem(
             layoutSize: NSCollectionLayoutSize(
-                widthDimension: .fractionalWidth(1), heightDimension: .fractionalWidth(1)
+                widthDimension: .fractionalWidth(1), heightDimension: .estimated(300)
             ),
             elementKind: UICollectionView.elementKindSectionHeader,
             alignment: .top

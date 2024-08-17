@@ -24,6 +24,7 @@ class LibraryViewController: UIViewController {
         stackview.translatesAutoresizingMaskIntoConstraints = false
         stackview.axis = .vertical
         stackview.spacing = 8
+        stackview.alignment = .fill
         
         return stackview
     }()
@@ -32,9 +33,17 @@ class LibraryViewController: UIViewController {
         super.viewDidLoad()
 
         view.backgroundColor = .systemBackground
+        configureChildView()
         configureSubviews()
         setupConstraints()
         configureNavigationBar()
+    }
+    
+    private func configureChildView() {
+        addChild(playlistVC)
+        playlistVC.didMove(toParent: self)
+        addChild(albumVC)
+        albumVC.didMove(toParent: self)
     }
     
     private func configureNavigationBar() {
@@ -66,6 +75,7 @@ class LibraryViewController: UIViewController {
         stackView.addArrangedSubview(libraryToggleView)
         libraryToggleView.delegate = self
         
+        scrollView.setContentHuggingPriority(.defaultLow, for: .vertical)
         stackView.addArrangedSubview(scrollView)
 
         scrollView.backgroundColor = .yellow

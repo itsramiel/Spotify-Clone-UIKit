@@ -19,6 +19,16 @@ final class CoverHeaderCollectionReusableView: UICollectionReusableView {
     
     private static let PLAY_BUTTON_SIZE: CGFloat = 60
     
+    private let mainstack: UIStackView = {
+        let view = UIStackView()
+        view.translatesAutoresizingMaskIntoConstraints = false
+        view.alignment = .fill
+        view.axis = .vertical
+        view.spacing = 16
+        
+        return view
+    }()
+    
     private let titleLabel: UILabel = {
         let label = UILabel()
         label.translatesAutoresizingMaskIntoConstraints = false
@@ -53,6 +63,25 @@ final class CoverHeaderCollectionReusableView: UICollectionReusableView {
         return imageView
     }()
     
+    private let row: UIStackView = {
+        let row = UIStackView()
+        row.translatesAutoresizingMaskIntoConstraints = false
+        row.axis = .horizontal
+        row.spacing = 12
+        row.alignment = .top
+        
+        return row
+    }()
+    
+    private let labelsStack: UIStackView = {
+        let stackView = UIStackView()
+        stackView.translatesAutoresizingMaskIntoConstraints = false
+        stackView.spacing = 12
+        stackView.axis = .vertical
+        
+        return stackView
+    }()
+    
     private let playButton = {
         let button = UIButton()
         button.translatesAutoresizingMaskIntoConstraints = false
@@ -72,6 +101,8 @@ final class CoverHeaderCollectionReusableView: UICollectionReusableView {
         backgroundColor = .systemBackground
         
         playButton.addTarget(self, action: #selector(didTapPlayAll), for: .touchUpInside)
+        addSubview(mainstack)
+        self.setupConstraints()
     }
     
     @objc private func didTapPlayAll() {
@@ -79,66 +110,42 @@ final class CoverHeaderCollectionReusableView: UICollectionReusableView {
     }
     
     private func setupConstraints() {
-        let imageSize = height / 1.8
+        mainstack.addArrangedSubview(imageView)
+        mainstack.addArrangedSubview(row)
         
-        addSubview(imageView)
-        NSLayoutConstraint.activate([
-            imageView.centerXAnchor.constraint(equalTo: centerXAnchor),
-            imageView.topAnchor.constraint(equalTo: topAnchor, constant: 20),
-            imageView.widthAnchor.constraint(equalToConstant: imageSize),
-            imageView.heightAnchor.constraint(equalToConstant: imageSize),
-        ])
-        
-        let row = UIStackView()
-        row.axis = .horizontal
-        addSubview(row)
-        row.spacing = 12
-        row.alignment = .top
-        row.translatesAutoresizingMaskIntoConstraints = false
-        NSLayoutConstraint.activate([
-            row.topAnchor.constraint(equalTo: imageView.bottomAnchor, constant: 10),
-            row.leadingAnchor.constraint(equalTo: leadingAnchor, constant: 10),
-            row.trailingAnchor.constraint(equalTo: trailingAnchor, constant: -10),
-            row.bottomAnchor.constraint(equalTo: bottomAnchor, constant: -10),
-
-            playButton.widthAnchor.constraint(equalToConstant: CoverHeaderCollectionReusableView.PLAY_BUTTON_SIZE),
-            playButton.heightAnchor.constraint(equalToConstant: CoverHeaderCollectionReusableView.PLAY_BUTTON_SIZE)
-        ])
-        
-
-        let stackView = UIStackView()
-        row.addArrangedSubview(stackView)
+        row.addArrangedSubview(labelsStack)
         row.addArrangedSubview(playButton)
-        stackView.spacing = 12
-        stackView.axis = .vertical
         
-        if let text = titleLabel.text, text.count > 0 {
-            stackView.addArrangedSubview(titleLabel)
-        }
-        if let text = subtitle1.text, text.count > 0 {
-            stackView.addArrangedSubview(subtitle1)
-        }
-        if let text = subtitle2.text, text.count > 0 {
-            stackView.addArrangedSubview(subtitle2)
-        }
-        
+        labelsStack.addArrangedSubview(titleLabel)
+        labelsStack.addArrangedSubview(subtitle1)
+        labelsStack.addArrangedSubview(subtitle2)
 
+        NSLayoutConstraint.activate([
+            mainstack.leadingAnchor.constraint(equalTo: safeAreaLayoutGuide.leadingAnchor, constant: 8),
+            mainstack.topAnchor.constraint(equalTo: safeAreaLayoutGuide.topAnchor, constant: 8),
+            mainstack.trailingAnchor.constraint(equalTo: safeAreaLayoutGuide.trailingAnchor, constant: -8),
+            mainstack.bottomAnchor.constraint(equalTo: safeAreaLayoutGuide.bottomAnchor, constant: -8),
+            
+            imageView.widthAnchor.constraint(equalTo: mainstack.widthAnchor),
+            imageView.heightAnchor.constraint(equalTo: imageView.widthAnchor),
+            
+            playButton.widthAnchor.constraint(equalToConstant: CoverHeaderCollectionReusableView.PLAY_BUTTON_SIZE),
+            playButton.heightAnchor.constraint(equalToConstant: CoverHeaderCollectionReusableView.PLAY_BUTTON_SIZE),
+        ])
     }
     
     required init?(coder: NSCoder) {
         fatalError()
     }
     
-    override func layoutSubviews() {
-        super.layoutSubviews()
-    }
-    
     func configure(with viewModel: CoverHeaderViewModel) {
         titleLabel.text = viewModel.title
+        titleLabel.isHidden = viewModel.title.count == 0
         subtitle1.text = viewModel.subtitle1
+        subtitle1.isHidden = viewModel.subtitle1.count == 0
         subtitle2.text = viewModel.subtitle2
+        subtitle2.isHidden = viewModel.subtitle2.count == 0
         imageView.sd_setImage(with: viewModel.artworkUrl)
-        
-        self.setupConstraints()
+        imageView.isHidden = viewModel.artworkUrl == nil
     }
 }

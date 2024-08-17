@@ -51,7 +51,7 @@ struct PlaylistDetail: Codable {
         let type, albumType: String
         let href: String
         let id: String
-        let images: [Image]
+        let images: [Image]?
         let name, releaseDate: String
         let releaseDatePrecision: String
         let uri: String
@@ -77,7 +77,7 @@ struct PlaylistDetail: Codable {
     let followers: Followers
     let href: String
     let id: String
-    let images: [Image]
+    let images: [Image]?
     let name: String
     let owner: Owner
     let primaryColor: String?

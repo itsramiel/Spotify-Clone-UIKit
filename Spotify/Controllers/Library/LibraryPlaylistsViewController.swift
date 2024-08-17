@@ -11,10 +11,12 @@ class LibraryPlaylistsViewController: UIViewController {
     
     var tableView: UITableView = {
         let view = UITableView()
+        view.translatesAutoresizingMaskIntoConstraints = false
         view.register(
             SearchResultTableViewCell.self,
             forCellReuseIdentifier: SearchResultTableViewCell.identifier
         )
+        view.isHidden = true
         
         return view
     }()
@@ -29,6 +31,7 @@ class LibraryPlaylistsViewController: UIViewController {
                 actionTitle: "Create"
             )
         )
+        view.isHidden = true
         
         return view
     }()
@@ -37,9 +40,13 @@ class LibraryPlaylistsViewController: UIViewController {
         super.viewDidLoad()
 
         view.backgroundColor = .systemPink
+        
+        view.addSubview(actionLabelView)
+        view.addSubview(tableView)
+        
         actionLabelView.delegate = self
-        fetchPlaylists()
         configureTableView()
+        fetchPlaylists()
     }
     
     private func configureTableView() {
@@ -61,14 +68,20 @@ class LibraryPlaylistsViewController: UIViewController {
     
     private func updateUI(){
         if playlists.isEmpty {
-            view.addSubview(actionLabelView)
-            
+            actionLabelView.isHidden = false
             NSLayoutConstraint.activate([
                 actionLabelView.centerXAnchor.constraint(equalTo: view.safeAreaLayoutGuide.centerXAnchor),
                 actionLabelView.centerYAnchor.constraint(equalTo: view.safeAreaLayoutGuide.centerYAnchor),
             ])
         } else {
-            
+            tableView.isHidden = false
+            NSLayoutConstraint.activate([
+                tableView.leadingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.leadingAnchor),
+                tableView.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor),
+                tableView.trailingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.trailingAnchor),
+                tableView.bottomAnchor.constraint(equalTo: view.safeAreaLayoutGuide.bottomAnchor),
+            ])
+            tableView.reloadData()
         }
     }
     
@@ -130,4 +143,10 @@ extension LibraryPlaylistsViewController: UITableViewDelegate, UITableViewDataSo
         return cell
     }
     
+    func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+        tableView.deselectRow(at: indexPath, animated: true)
+        
+        let vc = PlaylistViewController(playlist: playlists[indexPath.row])
+        navigationController?.pushViewController(vc, animated: true)
+    }
 }
