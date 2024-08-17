@@ -34,6 +34,24 @@ class LibraryViewController: UIViewController {
         view.backgroundColor = .systemBackground
         configureSubviews()
         setupConstraints()
+        configureNavigationBar()
+    }
+    
+    private func configureNavigationBar() {
+        switch libraryToggleView.state {
+        case .playlist:
+            navigationItem.rightBarButtonItem = UIBarButtonItem(
+                barButtonSystemItem: .add,
+                target: self,
+                action: #selector(didTapAdd)
+            )
+        case .album:
+            navigationItem.rightBarButtonItem = nil
+        }
+    }
+    
+    @objc private func didTapAdd() {
+        playlistVC.showCreatePlaylistAlert()
     }
     
     private func configureSubviews() {
@@ -81,15 +99,23 @@ class LibraryViewController: UIViewController {
 }
 
 extension LibraryViewController: UIScrollViewDelegate {
-    func scrollViewDidEndDecelerating(_ scrollView: UIScrollView) {
+    func updateUIFromScrollView() {
         let x = scrollView.contentOffset.x
         libraryToggleView.updateStateTo(x == 0 ? .playlist : .album)
+        configureNavigationBar()
+    }
+    
+    func scrollViewDidEndDecelerating(_ scrollView: UIScrollView) {
+        updateUIFromScrollView()
     }
     
     func scrollViewDidEndDragging(_ scrollView: UIScrollView, willDecelerate decelerate: Bool) {
         guard !decelerate else { return }
-        let x = scrollView.contentOffset.x
-        libraryToggleView.updateStateTo(x == 0 ? .playlist : .album)
+        updateUIFromScrollView()
+    }
+    
+    func scrollViewDidEndScrollingAnimation(_ scrollView: UIScrollView) {
+        updateUIFromScrollView()
     }
 }
 

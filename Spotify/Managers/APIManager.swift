@@ -20,6 +20,7 @@ final class APIManager {
         case UnAuthenticated
         case FailedToGetData
         case invalidQuery
+        case invalidBody
     }
 
     public func getCurrentUserProfile(completion: @escaping (Result<UserProfile, Error>) -> Void) {
@@ -27,7 +28,7 @@ final class APIManager {
             fatalError("Invalid URL")
         }
 
-        httpRequest(url: url, method: .GET, completion: { result in
+        httpRequest(httpParams: HttpRequestParams(url: url, method: .GET), completion: { result in
             switch result {
             case let .success(data):
                 do {
@@ -66,7 +67,7 @@ final class APIManager {
             return completion(.failure(APIError.invalidQuery))
         }
         
-        httpRequest(url: url, method: .GET, completion: { result in
+        httpRequest(httpParams: HttpRequestParams(url: url, method: .GET), completion: { result in
             switch result {
             case let .success(data):
                 do {
@@ -95,7 +96,7 @@ final class APIManager {
             fatalError("Invalid URL")
         }
 
-        httpRequest(url: url, method: .GET, completion: { result in
+        httpRequest(httpParams: HttpRequestParams(url: url, method: .GET), completion: { result in
             switch result {
             case let .success(data):
                 do {
@@ -124,7 +125,7 @@ final class APIManager {
             fatalError("Invalid URL")
         }
 
-        httpRequest(url: url, method: .GET, completion: { result in
+        httpRequest(httpParams: HttpRequestParams(url: url, method: .GET), completion: { result in
             switch result {
             case let .success(data):
                 do {
@@ -148,7 +149,7 @@ final class APIManager {
             fatalError("Invalid URL")
         }
 
-        httpRequest(url: url, method: .GET, completion: { result in
+        httpRequest(httpParams: HttpRequestParams(url: url, method: .GET), completion: { result in
             switch result {
             case let .success(data):
                 do {
@@ -172,7 +173,7 @@ final class APIManager {
             fatalError("Invalid URL")
         }
 
-        httpRequest(url: url, method: .GET, completion: { result in
+        httpRequest(httpParams: HttpRequestParams(url: url, method: .GET), completion: { result in
             switch result {
             case let .success(data):
                 do {
@@ -190,13 +191,88 @@ final class APIManager {
 
         })
     }
+    
+    typealias GetCurrentUserPlaylistsResponse = PaginatedResponse<Playlist>
+        
+    
+    public func getCurrentUserPlaylists(completion: @escaping (Result<[Playlist], Error>) -> Void){
+            guard let url = URL(string: "\(Constants.baseUrl)/me/playlists") else {
+                fatalError("Invalid URL")
+            }
+
+            httpRequest(httpParams: HttpRequestParams(url: url, method: .GET), completion: { result in
+                switch result {
+                case let .success(data):
+                    do {
+                        let jsonDecoder = JSONDecoder()
+                        jsonDecoder.keyDecodingStrategy = .convertFromSnakeCase
+
+                        try completion(.success(jsonDecoder.decode(GetCurrentUserPlaylistsResponse.self, from: data).items))
+                    } catch {
+                        print(error)
+                        completion(.failure(error))
+                    }
+                case let .failure(error):
+                    completion(.failure(error))
+                }
+
+            })
+    }
+    
+    public func createPlaylistWithName(_ name: String, completion: @escaping (Bool) -> Void){
+        getCurrentUserProfile { [weak self] result in
+            guard case let .success(userProfile) = result else {
+                return completion(false)
+            }
+            guard let url = URL(string: "\(Constants.baseUrl)/users/\(userProfile.id)/playlists") else {
+                fatalError("Invalid URL")
+            }
+
+            self?.httpRequest(httpParams: HttpRequestParams(url: url, method: .POST, body: ["name": name]), completion: { result in
+                switch result {
+                case let .success(data):
+                    do {
+                        let jsonDecoder = JSONDecoder()
+                        jsonDecoder.keyDecodingStrategy = .convertFromSnakeCase
+
+                        let _ = try jsonDecoder.decode(Playlist.self, from: data)
+                        completion(true)
+                    } catch {
+                        print(error)
+                        completion(false)
+                    }
+                case .failure(_):
+                    completion(false)
+                }
+
+            })
+        }
+
+    }
+    
+    public func addTrackWith(
+        id trackId: String,
+        toPlaylistWith playlistId: String,
+        completion: @escaping (Bool) -> Void
+    ){
+        
+    }
+    
+    public func removeTrackWith(
+        id trackId: String,
+        fromPlaylistWith playlistId: String,
+        completion: @escaping (Bool) -> Void
+    ){
+        
+    }
+
 
     public func getNewReleases(completion: @escaping (Result<NewReleasesResponse, Error>) -> Void) {
         guard let url = URL(string: "\(Constants.baseUrl)/browse/new-releases") else {
             fatalError("Invalid URL")
         }
 
-        httpRequest(url: url, method: .GET, completion: { result in
+        httpRequest(httpParams: HttpRequestParams(url: url, method: .GET), completion: { result in
             switch result {
             case let .success(data):
                 do {
@@ -220,7 +296,7 @@ final class APIManager {
             fatalError("Invalid URL")
         }
 
-        httpRequest(url: url, method: .GET, completion: { result in
+        httpRequest(httpParams: HttpRequestParams(url: url, method: .GET), completion: { result in
             switch result {
             case let .success(data):
                 do {
@@ -248,7 +324,7 @@ final class APIManager {
             fatalError("Invalid URL")
         }
 
-        httpRequest(url: url, method: .GET, completion: { result in
+        httpRequest(httpParams: HttpRequestParams(url: url, method: .GET), completion: { result in
             switch result {
             case let .success(data):
                 do {
@@ -286,7 +362,7 @@ final class APIManager {
                 fatalError("Invalid URL")
             }
 
-            self?.httpRequest(url: url, method: .GET, completion: { result in
+            self?.httpRequest(httpParams: HttpRequestParams(url: url, method: .GET), completion: { result in
                 switch result {
                 case let .success(data):
                     do {
@@ -306,17 +382,35 @@ final class APIManager {
             })
         })
     }
-
-    private func httpRequest(url: URL, method: HttpMethod, completion: @escaping (Result<Data, Error>) -> Void) {
+    
+    struct HttpRequestParams {
+        let url: URL
+        let method: HttpMethod
+        let body: [String: Codable]?
+        
+        init(url: URL, method: HttpMethod, body: [String : Codable]? = nil) {
+            self.url = url
+            self.method = method
+            self.body = body
+        }
+    }
+    
+    private func httpRequest(httpParams: HttpRequestParams, completion: @escaping (Result<Data, Error>) -> Void) {
         guard let accessToken = AuthManager.shared.accessToken else {
             completion(.failure(APIError.UnAuthenticated))
             return
         }
-
-        var request = URLRequest(url: url)
-        request.httpMethod = method.rawValue
+        
+        var request = URLRequest(url: httpParams.url)
+        request.httpMethod = httpParams.method.rawValue
         request.setValue("Bearer \(accessToken)", forHTTPHeaderField: "Authorization")
-
+        if let body = httpParams.body {
+            do {
+                request.httpBody = try JSONSerialization.data(withJSONObject: body)
+            } catch {
+                completion(.failure(APIError.invalidBody))
+            }
+        }
         let task = URLSession.shared.dataTask(with: request) { data, _, error in
             guard let data, error == nil else {
                 completion(.failure(APIError.FailedToGetData))

@@ -33,7 +33,14 @@ final class AuthManager {
         components.queryItems = [
             URLQueryItem(name: "response_type", value: "code"),
             URLQueryItem(name: "client_id", value: Constanst.clientID),
-            URLQueryItem(name: "scope", value: ["user-read-private", "user-read-private"].joined(separator: " ").addingPercentEncoding(withAllowedCharacters: .urlQueryAllowed)),
+            URLQueryItem(name: "scope", value: [
+                "user-read-private",
+                "user-read-private",
+                "playlist-read-private",
+                "playlist-read-collaborative",
+                "playlist-modify-public",
+                "playlist-modify-private"
+            ].joined(separator: " ").addingPercentEncoding(withAllowedCharacters: .urlQueryAllowed)),
             URLQueryItem(name: "redirect_uri", value: Constanst.redirectUri),
             URLQueryItem(name: "show_dialog", value: "true")
         ]

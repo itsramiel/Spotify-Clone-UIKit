@@ -50,6 +50,7 @@
 		9B225A4F2C6DE8F2002620BA /* LibraryPlaylistsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9B225A4E2C6DE8F2002620BA /* LibraryPlaylistsViewController.swift */; };
 		9B225A512C6DE939002620BA /* LibraryAlbumsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9B225A502C6DE939002620BA /* LibraryAlbumsViewController.swift */; };
 		9B225A542C6DF866002620BA /* LibraryToggleView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9B225A532C6DF866002620BA /* LibraryToggleView.swift */; };
+		9B225A562C6FB9D1002620BA /* ActionLabelView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9B225A552C6FB9D1002620BA /* ActionLabelView.swift */; };
 		9BCF76932C580C340007ACC4 /* NewReleasesResponse.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9BCF76922C580C340007ACC4 /* NewReleasesResponse.swift */; };
 		9BCF76952C590A420007ACC4 /* Image.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9BCF76942C590A420007ACC4 /* Image.swift */; };
 		9BCF76B72C63D88F0007ACC4 /* CoverHeaderCollectionReusableView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9BCF76B62C63D88F0007ACC4 /* CoverHeaderCollectionReusableView.swift */; };
@@ -114,6 +115,7 @@
 		9B225A4E2C6DE8F2002620BA /* LibraryPlaylistsViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LibraryPlaylistsViewController.swift; sourceTree = "<group>"; };
 		9B225A502C6DE939002620BA /* LibraryAlbumsViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LibraryAlbumsViewController.swift; sourceTree = "<group>"; };
 		9B225A532C6DF866002620BA /* LibraryToggleView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LibraryToggleView.swift; sourceTree = "<group>"; };
+		9B225A552C6FB9D1002620BA /* ActionLabelView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ActionLabelView.swift; sourceTree = "<group>"; };
 		9BCF76922C580C340007ACC4 /* NewReleasesResponse.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NewReleasesResponse.swift; sourceTree = "<group>"; };
 		9BCF76942C590A420007ACC4 /* Image.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Image.swift; sourceTree = "<group>"; };
 		9BCF76B62C63D88F0007ACC4 /* CoverHeaderCollectionReusableView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CoverHeaderCollectionReusableView.swift; sourceTree = "<group>"; };
@@ -200,7 +202,7 @@
 				9B21DCB52C50255F00E2C520 /* Managers */,
 				9B21DCB42C50255700E2C520 /* ViewModels */,
 				9B21DCB32C50254D00E2C520 /* Models */,
-				9B21DCB22C50254300E2C520 /* View */,
+				9B21DCB22C50254300E2C520 /* Views */,
 				9B21DCB12C50253400E2C520 /* Controllers */,
 				9B21DCAB2C5024C900E2C520 /* Info.plist */,
 			);
@@ -218,7 +220,7 @@
 			path = Controllers;
 			sourceTree = "<group>";
 		};
-		9B21DCB22C50254300E2C520 /* View */ = {
+		9B21DCB22C50254300E2C520 /* Views */ = {
 			isa = PBXGroup;
 			children = (
 				9B225A522C6DF84C002620BA /* Library */,
@@ -231,7 +233,7 @@
 				9BCF76C82C66812D0007ACC4 /* CategoryCollectionViewCell.swift */,
 				9B225A412C6A8973002620BA /* SearchResultTableViewCell.swift */,
 			);
-			path = View;
+			path = Views;
 			sourceTree = "<group>";
 		};
 		9B21DCB32C50254D00E2C520 /* Models */ = {
@@ -348,6 +350,7 @@
 		9B225A522C6DF84C002620BA /* Library */ = {
 			isa = PBXGroup;
 			children = (
+				9B225A552C6FB9D1002620BA /* ActionLabelView.swift */,
 				9B225A532C6DF866002620BA /* LibraryToggleView.swift */,
 			);
 			path = Library;
@@ -503,6 +506,7 @@
 				9B21DCD32C502A9800E2C520 /* HapticsManager.swift in Sources */,
 				9B225A472C6AA2FE002620BA /* PlaybackPresenter.swift in Sources */,
 				9BCF76C02C6529960007ACC4 /* CollectionSectionBuilder.swift in Sources */,
+				9B225A562C6FB9D1002620BA /* ActionLabelView.swift in Sources */,
 				9B21DCDF2C5299DE00E2C520 /* AuthResponse.swift in Sources */,
 				9BCF76932C580C340007ACC4 /* NewReleasesResponse.swift in Sources */,
 				9B21DCD72C502AF500E2C520 /* AudioTrack.swift in Sources */,
