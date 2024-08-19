@@ -13,16 +13,32 @@ class AlbumViewController: UIViewController {
     
     private let album: Album
     private var tracks = [Track]()
-    private let collectionView:UICollectionView = {
+    private let collectionView: UICollectionView = {
         let collectionView = UICollectionView(
-            frame: .zero, collectionViewLayout: UICollectionViewCompositionalLayout(sectionProvider: {_, _ in
-                let section = CollectionSectionBuilder.getTracksSection()
-                section.boundarySupplementaryItems = [
-                    CollectionSectionBuilder.getCoverHeaderSupplementaryItem()
-                ]
+            frame: .zero,
+            collectionViewLayout: UICollectionViewCompositionalLayout { sectionIndex, layoutEnvironment in
+                
+                // Create the layout for the header
+                let headerSize = NSCollectionLayoutSize(
+                    widthDimension: .fractionalWidth(1.0),
+                    heightDimension: .estimated(300)
+                )
+                let header = NSCollectionLayoutBoundarySupplementaryItem(
+                    layoutSize: headerSize,
+                    elementKind: UICollectionView.elementKindSectionHeader,
+                    alignment: .top
+                )
+                
+                // Create a list configuration with no sticky header
+                var configuration = UICollectionLayoutListConfiguration(appearance: .plain)
+                
+                
+                // Create the section with the header item
+                let section = NSCollectionLayoutSection.list(using: configuration, layoutEnvironment: layoutEnvironment)
+                section.boundarySupplementaryItems = [header]
                 
                 return section
-            })
+            }
         )
         collectionView.translatesAutoresizingMaskIntoConstraints = false
         

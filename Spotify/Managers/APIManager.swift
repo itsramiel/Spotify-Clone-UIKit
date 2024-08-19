@@ -288,12 +288,43 @@ final class APIManager {
         })
     }
     
-    public func removeTrackWith(
-        id trackId: String,
+    struct RemoveTrackResponse: Codable {
+        let snapshotId: String
+    }
+    
+    public func RemoveTrackWith(
+        uri trackUri: String,
         fromPlaylistWith playlistId: String,
         completion: @escaping (Bool) -> Void
     ){
+        guard let url = URL(string: "\(Constants.baseUrl)/playlists/\(playlistId)/tracks") else {
+            fatalError("Invalid URL")
+        }
         
+        let body: [String: Codable] = [
+            "tracks": [
+                ["uri": trackUri]
+            ]
+        ]
+        
+        self.httpRequest(httpParams: HttpRequestParams(url: url, method: .DELETE, body: body), completion: { result in
+            switch result {
+            case let .success(data):
+                do {
+                    let jsonDecoder = JSONDecoder()
+                    jsonDecoder.keyDecodingStrategy = .convertFromSnakeCase
+                    
+                    let _ = try jsonDecoder.decode(RemoveTrackResponse.self, from: data)
+                    completion(true)
+                } catch {
+                    print(error)
+                    completion(false)
+                }
+            case .failure(_):
+                completion(false)
+            }
+            
+        })
     }
 
 

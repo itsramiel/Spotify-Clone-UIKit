@@ -2,23 +2,59 @@ import UIKit
 
 class PlaylistViewController: UIViewController {
     private let playlist: Playlist
+    private let isOwner: Bool
     private var tracks = [Track]()
 
-    private let collectionView = UICollectionView(
-        frame: .zero,
-        collectionViewLayout: UICollectionViewCompositionalLayout(sectionProvider: { _, _ in
-            let section = CollectionSectionBuilder.getTracksSection()
-            
-            section.boundarySupplementaryItems = [
-                CollectionSectionBuilder.getCoverHeaderSupplementaryItem()
-            ]
+    lazy private var collectionView: UICollectionView = {
+        let view = UICollectionView(
+            frame: .zero,
+            collectionViewLayout: UICollectionViewCompositionalLayout { sectionIndex, layoutEnvironment in
+                
+                // Create the layout for the header
+                let headerSize = NSCollectionLayoutSize(
+                    widthDimension: .fractionalWidth(1.0),
+                    heightDimension: .estimated(300)
+                )
+                let header = NSCollectionLayoutBoundarySupplementaryItem(
+                    layoutSize: headerSize,
+                    elementKind: UICollectionView.elementKindSectionHeader,
+                    alignment: .top
+                )
+                
+                // Create a list configuration with no sticky header
+                var configuration = UICollectionLayoutListConfiguration(appearance: .plain)
+                
+                configuration.trailingSwipeActionsConfigurationProvider = { [weak self] indexPath in
+                    guard let self else { fatalError() }
+                    let track = self.tracks[indexPath.row]
+                    let deleteAction = UIContextualAction(style: .destructive, title: "Delete") { action, view, completion in
+                        APIManager.shared.RemoveTrackWith(uri: track.uri, fromPlaylistWith: self.playlist.id, completion: { success in
+                            DispatchQueue.main.async {
+                                self.tracks.remove(at: indexPath.row)
+                                self.collectionView.deleteItems(at: [indexPath])
+                                completion(success)
+                            }
+                        })
+                    }
+                    return UISwipeActionsConfiguration(actions: [deleteAction])
+                }
+                
+                
+                // Create the section with the header item
+                let section = NSCollectionLayoutSection.list(using: configuration, layoutEnvironment: layoutEnvironment)
+                section.interGroupSpacing = 8
+                section.boundarySupplementaryItems = [header]
+                
+                return section
+            }
+        )
+        
+        return view
+    }()
 
-            return section
-        })
-    )
-
-    init(playlist: Playlist) {
+    init(playlist: Playlist, isOwner: Bool = false) {
         self.playlist = playlist
+        self.isOwner = isOwner
         super.init(nibName: nil, bundle: nil)
         
         navigationItem.rightBarButtonItem = UIBarButtonItem(

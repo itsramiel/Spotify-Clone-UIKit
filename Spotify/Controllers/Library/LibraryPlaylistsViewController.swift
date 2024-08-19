@@ -159,7 +159,7 @@ extension LibraryPlaylistsViewController: UITableViewDelegate, UITableViewDataSo
         if let onPlaylistPress {
             onPlaylistPress(playlist)
         } else {
-            let vc = PlaylistViewController(playlist: playlist)
+            let vc = PlaylistViewController(playlist: playlist, isOwner: true)
             navigationController?.pushViewController(vc, animated: true)
         }
     }

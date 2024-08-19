@@ -64,10 +64,10 @@ class PlaylistTrackCollectionViewCell: UICollectionViewCell {
             trackCoverImageView.widthAnchor.constraint(equalToConstant: PlaylistTrackCollectionViewCell.IMAGE_SIZE),
             trackCoverImageView.heightAnchor.constraint(equalToConstant: PlaylistTrackCollectionViewCell.IMAGE_SIZE),
             
-            mainStack.leftAnchor.constraint(equalTo: contentView.leftAnchor, constant: PlaylistTrackCollectionViewCell.PADDING),
-            mainStack.topAnchor.constraint(equalTo: contentView.topAnchor, constant: PlaylistTrackCollectionViewCell.PADDING),
-            mainStack.rightAnchor.constraint(equalTo: contentView.rightAnchor, constant: -PlaylistTrackCollectionViewCell.PADDING),
-            mainStack.bottomAnchor.constraint(equalTo: contentView.bottomAnchor, constant: -PlaylistTrackCollectionViewCell.PADDING)
+            mainStack.leftAnchor.constraint(equalTo: contentView.leftAnchor),
+            mainStack.topAnchor.constraint(equalTo: contentView.topAnchor),
+            mainStack.rightAnchor.constraint(equalTo: contentView.rightAnchor),
+            mainStack.bottomAnchor.constraint(equalTo: contentView.bottomAnchor)
         ])
 
         labelStack.addArrangedSubview(trackNameLabel)

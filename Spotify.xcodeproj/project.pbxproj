@@ -57,7 +57,6 @@
 		9BCF76B92C63DC800007ACC4 /* CoverHeaderViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9BCF76B82C63DC800007ACC4 /* CoverHeaderViewModel.swift */; };
 		9BCF76BB2C651BBB0007ACC4 /* HomeHeaderCollectionReusableView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9BCF76BA2C651BBB0007ACC4 /* HomeHeaderCollectionReusableView.swift */; };
 		9BCF76BD2C6525010007ACC4 /* AlbumDetail.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9BCF76BC2C6525010007ACC4 /* AlbumDetail.swift */; };
-		9BCF76C02C6529960007ACC4 /* CollectionSectionBuilder.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9BCF76BF2C6529960007ACC4 /* CollectionSectionBuilder.swift */; };
 		9BCF76C22C6535A40007ACC4 /* AlbumTrackCellViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9BCF76C12C6535A40007ACC4 /* AlbumTrackCellViewModel.swift */; };
 		9BCF76C42C6535EA0007ACC4 /* AlbumTrackCollectionViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9BCF76C32C6535EA0007ACC4 /* AlbumTrackCollectionViewCell.swift */; };
 		9BCF76C72C653AFB0007ACC4 /* String+formattedDate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9BCF76C62C653AFB0007ACC4 /* String+formattedDate.swift */; };
@@ -122,7 +121,6 @@
 		9BCF76B82C63DC800007ACC4 /* CoverHeaderViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CoverHeaderViewModel.swift; sourceTree = "<group>"; };
 		9BCF76BA2C651BBB0007ACC4 /* HomeHeaderCollectionReusableView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HomeHeaderCollectionReusableView.swift; sourceTree = "<group>"; };
 		9BCF76BC2C6525010007ACC4 /* AlbumDetail.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AlbumDetail.swift; sourceTree = "<group>"; };
-		9BCF76BF2C6529960007ACC4 /* CollectionSectionBuilder.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CollectionSectionBuilder.swift; sourceTree = "<group>"; };
 		9BCF76C12C6535A40007ACC4 /* AlbumTrackCellViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AlbumTrackCellViewModel.swift; sourceTree = "<group>"; };
 		9BCF76C32C6535EA0007ACC4 /* AlbumTrackCollectionViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AlbumTrackCollectionViewCell.swift; sourceTree = "<group>"; };
 		9BCF76C62C653AFB0007ACC4 /* String+formattedDate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "String+formattedDate.swift"; sourceTree = "<group>"; };
@@ -197,7 +195,6 @@
 			children = (
 				9B225A452C6AA2E0002620BA /* Presenters */,
 				9BCF76C52C653AE30007ACC4 /* extensions */,
-				9BCF76BE2C65297C0007ACC4 /* Utils */,
 				9B21DCB62C50257500E2C520 /* Resources */,
 				9B21DCB52C50255F00E2C520 /* Managers */,
 				9B21DCB42C50255700E2C520 /* ViewModels */,
@@ -356,14 +353,6 @@
 			path = Library;
 			sourceTree = "<group>";
 		};
-		9BCF76BE2C65297C0007ACC4 /* Utils */ = {
-			isa = PBXGroup;
-			children = (
-				9BCF76BF2C6529960007ACC4 /* CollectionSectionBuilder.swift */,
-			);
-			path = Utils;
-			sourceTree = "<group>";
-		};
 		9BCF76C52C653AE30007ACC4 /* extensions */ = {
 			isa = PBXGroup;
 			children = (
@@ -505,7 +494,6 @@
 				9B21DCB82C5028BD00E2C520 /* TabBarViewController.swift in Sources */,
 				9B21DCD32C502A9800E2C520 /* HapticsManager.swift in Sources */,
 				9B225A472C6AA2FE002620BA /* PlaybackPresenter.swift in Sources */,
-				9BCF76C02C6529960007ACC4 /* CollectionSectionBuilder.swift in Sources */,
 				9B225A562C6FB9D1002620BA /* ActionLabelView.swift in Sources */,
 				9B21DCDF2C5299DE00E2C520 /* AuthResponse.swift in Sources */,
 				9BCF76932C580C340007ACC4 /* NewReleasesResponse.swift in Sources */,
