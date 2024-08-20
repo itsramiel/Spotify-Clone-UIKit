@@ -1,4 +1,6 @@
-# Spotify Cline App with UIKit
+# Spotify Clone App with UIKit
+
+## Attention: I am aware that `clientID` and `clientSecret` should not be exposed publicly for privacy but this repo was not public while these were active and now the credentials are no longer active
 
 As part of my learning of iOS development, I followed iOS Academy's [youtube tutorial](https://www.youtube.com/watch?v=JzngncpZLuw&t=42984s) to build this app.
 It helped me put theory into practice, and here are some highlights:
