@@ -70,6 +70,7 @@
 		9F6EE25D97EB0429393E9131 /* Track.swift in Sources */ = {isa = PBXBuildFile; fileRef = 98B7AB8E8EFA990944FCEAF3 /* Track.swift */; };
 		9FE583369F4AAF5542E23543 /* FeaturedPlaylistsResponse.swift in Sources */ = {isa = PBXBuildFile; fileRef = BBB52DB45AF2408EBDA09DCF /* FeaturedPlaylistsResponse.swift */; };
 		E302C3EA6AB9839EC50BFD1A /* .gitignore in Sources */ = {isa = PBXBuildFile; fileRef = FE625B0E322834AE7750DB39 /* .gitignore */; };
+		F6A9ACF2C1E0099F737B0C86 /* readme.md in Sources */ = {isa = PBXBuildFile; fileRef = 2BD21CC3FEECD35DC3117B23 /* readme.md */; };
 		FADFDACE1689BAE5004F53BD /* PlaylistDetail.swift in Sources */ = {isa = PBXBuildFile; fileRef = BA84BA31B62FCF3DE5A9B508 /* PlaylistDetail.swift */; };
 /* End PBXBuildFile section */
 
@@ -77,6 +78,7 @@
 		0BA9D9609B6A7782E1947D8E /* FeaturedPlaylistCollectionViewCell.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = FeaturedPlaylistCollectionViewCell.swift; sourceTree = "<group>"; };
 		0EB095981E2BE17F99A77AA2 /* Album.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = Album.swift; sourceTree = "<group>"; };
 		194EE64AAC55F567A8D5F6BA /* NewReleasesCellViewModel.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = NewReleasesCellViewModel.swift; sourceTree = "<group>"; };
+		2BD21CC3FEECD35DC3117B23 /* readme.md */ = {isa = PBXFileReference; includeInIndex = 1; path = readme.md; sourceTree = "<group>"; };
 		470E3DAAAED813F4FF43947A /* AlbumViewController.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = AlbumViewController.swift; sourceTree = "<group>"; };
 		4DA9B49031593F0CA9127419 /* Pods-Spotify.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Spotify.release.xcconfig"; path = "Target Support Files/Pods-Spotify/Pods-Spotify.release.xcconfig"; sourceTree = "<group>"; };
 		54FCA24B4101F3252F3C866E /* Playlist.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = Playlist.swift; sourceTree = "<group>"; };
@@ -188,6 +190,7 @@
 			children = (
 				9B21DC9A2C5024C800E2C520 /* Spotify.app */,
 				FE625B0E322834AE7750DB39 /* .gitignore */,
+				2BD21CC3FEECD35DC3117B23 /* readme.md */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -549,6 +552,7 @@
 				461EC352FDE1C52B22AF09DF /* AlbumViewController.swift in Sources */,
 				9B225A512C6DE939002620BA /* LibraryAlbumsViewController.swift in Sources */,
 				FADFDACE1689BAE5004F53BD /* PlaylistDetail.swift in Sources */,
+				F6A9ACF2C1E0099F737B0C86 /* readme.md in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
