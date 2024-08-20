@@ -38,7 +38,7 @@ class SettingsViewController: UIViewController, UITableViewDelegate, UITableView
         ]),
         Section(title: "Account", options: [
             Option(title: "Sign Out", handler: { [weak self] in
-                // TBI
+                AuthManager.shared.signOut()
             })
         ])
     ]

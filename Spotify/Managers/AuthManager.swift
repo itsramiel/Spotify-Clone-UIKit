@@ -158,4 +158,11 @@ final class AuthManager {
             UserDefaults.standard.setValue(refreshToken, forKey: Constanst.UserDefaults.refreshToken.rawValue)
         }
     }
+    
+    public func signOut() {
+        UserDefaults.standard.removeObject(forKey: Constanst.UserDefaults.accessToken.rawValue)
+        UserDefaults.standard.removeObject(forKey: Constanst.UserDefaults.expirationDate.rawValue)
+        UserDefaults.standard.removeObject(forKey: Constanst.UserDefaults.refreshToken.rawValue)
+        NotificationCenter.default.post(name: .userLoggedOut, object: nil)
+    }
 }

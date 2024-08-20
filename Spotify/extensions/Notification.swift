@@ -9,4 +9,5 @@ import Foundation
 
 extension Notification.Name {
     static let albumSavedNotification = Notification.Name("albumSavedNotification")
+    static let userLoggedOut = Notification.Name("userLoggedOut")
 }
