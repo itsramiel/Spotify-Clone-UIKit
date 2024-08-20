@@ -31,7 +31,7 @@ class ActionLabelView: UIView {
     private let button: UIButton = {
         let button = UIButton()
         button.translatesAutoresizingMaskIntoConstraints = false
-        button.setTitleColor(.link, for: .normal)
+        button.setTitleColor(.primary, for: .normal)
         
         return button
     }()

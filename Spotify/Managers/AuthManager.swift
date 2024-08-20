@@ -39,7 +39,9 @@ final class AuthManager {
                 "playlist-read-private",
                 "playlist-read-collaborative",
                 "playlist-modify-public",
-                "playlist-modify-private"
+                "playlist-modify-private",
+                "user-library-read",
+                "user-library-modify",
             ].joined(separator: " ").addingPercentEncoding(withAllowedCharacters: .urlQueryAllowed)),
             URLQueryItem(name: "redirect_uri", value: Constanst.redirectUri),
             URLQueryItem(name: "show_dialog", value: "true")

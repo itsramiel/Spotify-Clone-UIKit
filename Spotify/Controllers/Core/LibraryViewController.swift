@@ -78,7 +78,6 @@ class LibraryViewController: UIViewController {
         scrollView.setContentHuggingPriority(.defaultLow, for: .vertical)
         stackView.addArrangedSubview(scrollView)
 
-        scrollView.backgroundColor = .yellow
         scrollView.delegate = self
         
         scrollView.addSubview(playlistVC.view)

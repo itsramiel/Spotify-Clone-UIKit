@@ -1,6 +1,13 @@
 import UIKit
 
 class AlbumViewController: UIViewController {
+    var isSaved: Bool? = nil {
+        didSet {
+            setupHeaderRightButton()
+            NotificationCenter.default.post(name: .albumSavedNotification, object: nil)
+        }
+    }
+    
     init(album: Album) {
         self.album = album
         super.init(nibName: nil, bundle: nil)
@@ -68,6 +75,14 @@ class AlbumViewController: UIViewController {
             }
         })
         
+        APIManager.shared.getUserSavedAlbums {[weak self] result in
+            guard case let .success(albums) = result, let self else {
+                return
+            }
+            
+            isSaved = albums.contains(where: {$0.id == self.album.id})
+        }
+        
     }
     
     private func setupCollectionView(){
@@ -82,6 +97,36 @@ class AlbumViewController: UIViewController {
     private func setupNavigationBar() {
         title = album.name
         navigationItem.largeTitleDisplayMode = .never
+    }
+    
+    private func setupHeaderRightButton() {
+        DispatchQueue.main.async { [weak self] in
+            guard let self, let isSaved else { return }
+            
+            navigationItem.rightBarButtonItem = UIBarButtonItem(
+                barButtonSystemItem: isSaved  ? .trash : .save,
+                target: self,
+                action: isSaved ? #selector(removeAlbumFromSavedAlbums): #selector(addAlbumToSavedAlbums)
+            )
+        }
+    }
+    
+    @objc private func removeAlbumFromSavedAlbums() {
+        APIManager.shared.removeFromSavedAlbums(withId: album.id) { [weak self] success in
+            HapticsManager.shared.feedback(type: success ? .success: .warning)
+            if(success) {
+                self?.isSaved = false
+            }
+        }
+    }
+    
+    @objc private func addAlbumToSavedAlbums() {
+        APIManager.shared.addToSavedAlbums(with: album.id) { [weak self] success in
+            HapticsManager.shared.feedback(type: success ? .success: .warning)
+            if(success) {
+                self?.isSaved = true
+            }
+        }
     }
     
     private func setupConstrainsts() {

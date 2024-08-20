@@ -22,6 +22,75 @@ final class APIManager {
         case invalidQuery
         case invalidBody
     }
+    
+    struct SavedAlbum: Codable {
+        let addedAt: String
+        let album: Album
+    }
+    
+    public func getUserSavedAlbums(completion: @escaping (Result<[Album], Error>) -> Void){
+        guard let url = URL(string: "\(Constants.baseUrl)/me/albums") else {
+            fatalError("Invalid URL")
+        }
+        
+        httpRequest(httpParams: HttpRequestParams(url: url, method: .GET), completion: { result in
+            switch result {
+            case let .success(data):
+                do {
+                    let jsonDecoder = JSONDecoder()
+                    jsonDecoder.keyDecodingStrategy = .convertFromSnakeCase
+                    
+                    try completion(.success(jsonDecoder.decode(PaginatedResponse<SavedAlbum>.self, from: data).items.map({$0.album})))
+                } catch {
+                    print(error)
+                    completion(.failure(error))
+                }
+            case let .failure(error):
+                completion(.failure(error))
+            }
+            
+        })
+    }
+    
+    public func addToSavedAlbums(with id: String, completion: @escaping (Bool) -> Void){
+        guard let url = URL(string: "\(Constants.baseUrl)/me/albums") else {
+            fatalError("Invalid URL")
+        }
+        
+        let body: [String: Codable] = [
+            "ids": [id]
+        ]
+        
+        httpRequest(httpParams: HttpRequestParams(url: url, method: .PUT, body: body)) { result in
+            switch result {
+            case let .success(data):
+                let x = try? JSONSerialization.jsonObject(with: data)
+                completion(true)
+            case .failure:
+                completion(false)
+            }
+        }
+    }
+    
+    public func removeFromSavedAlbums(withId id: String, completion: @escaping (Bool) -> Void){
+        guard let url = URL(string: "\(Constants.baseUrl)/me/albums") else {
+            fatalError("Invalid URL")
+        }
+        
+        let body: [String: Codable] = [
+            "ids": [id]
+        ]
+
+        httpRequest(httpParams: HttpRequestParams(url: url, method: .DELETE, body: body)) { result in
+            switch result {
+            case .success:
+                completion(true)
+            case .failure:
+                completion(false)
+            }
+        }
+    }
+
 
     public func getCurrentUserProfile(completion: @escaping (Result<UserProfile, Error>) -> Void) {
         guard let url = URL(string: "\(Constants.baseUrl)/me") else {
@@ -473,7 +542,15 @@ final class APIManager {
                 completion(.failure(APIError.invalidBody))
             }
         }
-        let task = URLSession.shared.dataTask(with: request) { data, _, error in
+        let task = URLSession.shared.dataTask(with: request) { data, response, error in
+            guard let response = response as? HTTPURLResponse else {
+                completion(.failure(APIError.FailedToGetData))
+                return
+            }
+            
+            if(response.statusCode >= 400) {
+                return completion(.failure(APIError.FailedToGetData))
+            }
             guard let data, error == nil else {
                 completion(.failure(APIError.FailedToGetData))
                 return

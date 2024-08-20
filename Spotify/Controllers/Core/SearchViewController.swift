@@ -113,6 +113,7 @@ extension SearchViewController: UICollectionViewDelegate, UICollectionViewDataSo
     }
     
     func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
+        HapticsManager.shared.select()
         let vc = CategoryViewController(category: categories[indexPath.row])
         navigationController?.pushViewController(vc, animated: true)
     }

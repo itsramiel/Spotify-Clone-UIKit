@@ -360,6 +360,7 @@ extension HomeViewController: UICollectionViewDataSource, UICollectionViewDelega
     }
     
     func collectionView(_: UICollectionView, didSelectItemAt indexPath: IndexPath) {
+        HapticsManager.shared.select()
         let section = sections[indexPath.section]
         switch section {
         case .newReleases:
