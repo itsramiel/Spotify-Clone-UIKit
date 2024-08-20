@@ -23,8 +23,6 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
                     window.rootViewController = TabBarViewController()
                 } else {
                     let navVC = UINavigationController(rootViewController: WelcomeViewController())
-                    navVC.navigationBar.prefersLargeTitles = true
-                    navVC.viewControllers.first?.navigationItem.largeTitleDisplayMode = .always
                     window.rootViewController = navVC
                 }
                 UIView.transition(with: window, duration: 0.3, options: .transitionCrossDissolve,animations: {})
